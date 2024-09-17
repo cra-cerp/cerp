@@ -1,6 +1,7 @@
 #' General function for creating pushed/global vector of values
 #'
 #' @importFrom mgsub mgsub
+#' @importFrom cerp escape_punct
 #'
 #' @param dataSet A tibble or data frame object.
 #' @param listVarStems A character vector of unique variable (name) stems.
@@ -44,8 +45,11 @@ if(length(dots_list) != 0){
 
 ## otherwise set these inputs to null/pre-determined string
 groupFlag <- if(is.null(dots) | !any(grepl("^groupflag$", tolower(names(dots))))){"_w\\d$"} else{groupFlag}
-# check that group flag ends in \\d$
-groupFlag <- ifelse(grepl(pattern = "\\d$", groupFlag), groupFlag, paste0(groupFlag, "\\d$"))
+## check that groupFlag ends in a digit
+groupFlag <- ifelse(grepl(cerp::escape_punct("\\d$"), groupFlag), groupFlag, paste0(groupFlag, "\\d$"))
+## check that groupFlag as underscore
+groupFlag <- ifelse(grepl(pattern = "^_", x = groupFlag), groupFlag, paste0("_",groupFlag))
+## create groupFlag shortened
 groupFlagShortened <- if(is.null(dots) | !any(grepl("^groupflag$", tolower(names(dots))))){"_w"} else{gsub("\\d$","", groupFlag, fixed = TRUE)}
 
 ## general function for finding most up to date value to be pushed

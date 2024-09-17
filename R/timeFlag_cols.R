@@ -1,5 +1,7 @@
 #' Function to create indicator wave column
 #'
+#' @importFrom cerp escape_punct
+#'
 #' @description
 #' This is a generalized function for extracting time or group flags for variables.
 #'
@@ -46,8 +48,10 @@ if(length(dots_list) != 0){
 
 ## set these inputs to null/pre-determined string
 groupFlag <- if(is.null(dots) | !any(grepl("^groupflag$", tolower(names(dots))))){"_w\\d$"} else{groupFlag}
-# check that group flag ends in \\d$
-groupFlag <- ifelse(grepl(pattern = "\\d$", groupFlag), groupFlag, paste0(groupFlag, "\\d$"))
+## check that groupFlag ends in a digit
+groupFlag <- ifelse(grepl(cerp::escape_punct("\\d$"), groupFlag), groupFlag, paste0(groupFlag, "\\d$"))
+## check that groupFlag as underscore
+groupFlag <- ifelse(grepl(pattern = "^_", x = groupFlag), groupFlag, paste0("_",groupFlag))
 
 ### iterate over x to find group/time flags
 sapply(x, function(find_groupFlag){
