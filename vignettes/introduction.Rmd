@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The CRA Center for Evaluating the Research Pipeline (CERP) collects large amounts of survey data. The cerp package makes it easy to clean, manipulate, and transform CERP data. All functions in the cerp package are documented, and most contain self-contained examples of how to apply each function. If you notice a bug or you have trouble using a function, please contact [Dr. Ama Nyame-Mensah](mailto:ama@cra.org), the maintainer of the cerp package.
+The CRA Center for Evaluating the Research Pipeline (CERP) collects large amounts of survey data. The cerp package makes it easy to clean, manipulate, and transform CERP data. All functions in the cerp package are documented, and most contain self-contained examples of how to apply each function. This document introduces you to cerp's most frequently used tools, and shows you how to apply them to data frames. If you notice a bug or you have trouble using a function, please contact [Dr. Ama Nyame-Mensah](mailto:ama@cra.org), the maintainer of the cerp package.
 
 
   
