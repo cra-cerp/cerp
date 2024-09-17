@@ -25,7 +25,8 @@ A character vector. If the same value is identified more than once in the same c
 the corresponding row number/index for each matched instance is returned.
 }
 \description{
-Identify duplicates in a column and tag with each matched element's row number.
+This function can be used to identify and tag duplicates in a
+given tibble or data frame column.
 }
 \examples{
 # Simple searching for duplicate letters

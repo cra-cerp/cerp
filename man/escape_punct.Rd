@@ -2,7 +2,7 @@
 % Please edit documentation in R/escape_punct.R
 \name{escape_punct}
 \alias{escape_punct}
-\title{Function to escape punctuation for regex search .}
+\title{Function to escape punctuation in string}
 \usage{
 escape_punct(x)
 }
@@ -10,7 +10,7 @@ escape_punct(x)
 \item{x}{a character vector.}
 }
 \description{
-Function to escape punctuation for regex search .
+This function can be used to escape escape punctuation in string.
 }
 \examples{
 stringSearch <- "All punctuations must be escaped. Will this function escape them? Yes."

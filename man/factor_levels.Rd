@@ -2,7 +2,7 @@
 % Please edit documentation in R/factor_levels.R
 \name{factor_levels}
 \alias{factor_levels}
-\title{Function to create factor levels for recoding.}
+\title{Function to create factor levels}
 \usage{
 factor_levels(x, key, ...)
 }
@@ -27,7 +27,8 @@ input you can specify; variable values will be extracted from this column/field)
 A vector of values.
 }
 \description{
-Function to create factor levels for recoding.
+This function can be used to create factor levels for variables
+in a data frame or tibble.
 }
 \examples{
 # Example with data frame using default field names: variableName and variableValues

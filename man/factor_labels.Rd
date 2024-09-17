@@ -2,7 +2,7 @@
 % Please edit documentation in R/factor_labels.R
 \name{factor_labels}
 \alias{factor_labels}
-\title{Function to create factor labels for recoding.}
+\title{Function to create factor labels}
 \usage{
 factor_labels(x, key, ...)
 }
@@ -25,7 +25,8 @@ and 2) variable values. NOTE: Variable values should be concatenated together us
 A vector of values.
 }
 \description{
-Function to create factor labels for recoding.
+This function can be used to create factor labels for variables
+in a data frame or tibble.
 }
 \examples{
 # Example with data frame using default field names: variableName

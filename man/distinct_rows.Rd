@@ -2,7 +2,7 @@
 % Please edit documentation in R/distinct_rows.R
 \name{distinct_rows}
 \alias{distinct_rows}
-\title{A function that is similar to the dplyr::distinct() function using Base R}
+\title{A function to retain/keep unique rows}
 \usage{
 distinct_rows(dataset, column, retain, keep_allVars, ...)
 }
@@ -29,7 +29,8 @@ use the function.}
 A data frame.
 }
 \description{
-A function that is similar to the dplyr::distinct() function using Base R
+This function is similar to dplyr's distinct() function and can be used to
+retain distinct/unique rows.
 }
 \examples{
 # Example with one key column (want to keep earliest date)

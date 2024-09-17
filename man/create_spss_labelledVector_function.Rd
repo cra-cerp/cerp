@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_spss_labelledVector_function.R
 \name{create_spss_labelledVector_function}
 \alias{create_spss_labelledVector_function}
-\title{Function for quickly generating SPSS labelled vector using haven.}
+\title{Function for quickly generating SPSS labelled vector using haven}
 \usage{
 create_spss_labelledVector_function(dataSet, variableName, ...)
 }
@@ -39,8 +39,9 @@ create_spss_labelledVector_function(dataSet, variableName, ...)
 A vector of labelled values.
 }
 \description{
-User can either provide codebook inputs OR specify inputs, but not both.
-See inputs below.
+This function can be used to quickly generate an SPSS labelled vector using
+labelled_spss from the haven package. Users can either provide codebook inputs OR specify
+inputs, but not both.
 }
 \examples{
 # Example with supplied inputs, and missing is not recoded

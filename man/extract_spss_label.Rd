@@ -2,7 +2,7 @@
 % Please edit documentation in R/extract_spss_label.R
 \name{extract_spss_label}
 \alias{extract_spss_label}
-\title{Function for extracting question/variable labels for variables/columns from an SPSS data set}
+\title{Function for extracting variable labels from an SPSS data set}
 \usage{
 extract_spss_label(dataSet, variableName)
 }
@@ -15,7 +15,8 @@ extract_spss_label(dataSet, variableName)
 A data frame with two columns: variable names (column 1) and labels (column 2).
 }
 \description{
-Function for extracting question/variable labels for variables/columns from an SPSS data set
+This function can be used to extract question/variable labels from
+an SPSS data set.
 }
 \author{
 Ama Nyame-Mensah

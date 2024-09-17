@@ -23,7 +23,8 @@ A character vector that is column-binded to the original supplied dataSet. NOTE:
 (i.e., LATEST) non-null, non-missing value of the LATEST group/time flag is retained.
 }
 \description{
-General function for creating pushed/global vector of values
+This function can be used to find and retain the most recent
+response for a record.
 }
 \examples{
 # Example with default group/time flag
