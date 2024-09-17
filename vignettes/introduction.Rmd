@@ -32,11 +32,13 @@ library(cerp)
 
 ```{r}
 
-distinct_rows_data$duplicates <- checkDuplicates(dataSet = distinct_rows_data, columnName = "id")
+distinct_rows_data$duplicates <- 
+  checkDuplicates(dataSet = distinct_rows_data, 
+                  columnName = "id")
 
 distinct_rows_data
 
-dplyr::mutate(distinct_rows_data, duplicates2 = checkDuplicates(dataSet = distinct_rows_data, columnName = "id"))
+dplyr::mutate(distinct_rows_data, duplicates2 = checkDuplicates(dataSet = distinct_rows_data,columnName = "id"))
 
 ```
 
@@ -46,12 +48,16 @@ dplyr::mutate(distinct_rows_data, duplicates2 = checkDuplicates(dataSet = distin
 
 ```{r}
 
-distinct_rows_data2 <- distinct_rows_data[order(distinct_rows_data$id, 
-                                                distinct_rows_data$recordedDate),]
+distinct_rows_data2 <- 
+  distinct_rows_data[order(distinct_rows_data$id,
+                           distinct_rows_data$recordedDate),]
 
-distinct_rows(dataset = distinct_rows_data2, column = id, retain = first, keep_allVars = TRUE)
+distinct_rows(dataset = distinct_rows_data2, 
+              column = id, retain = first, keep_allVars = TRUE)
 
-distinct_rows(dataset = distinct_rows_data2, column = id, retain = last, keep_allVars = TRUE)
+distinct_rows(dataset = distinct_rows_data2, 
+              column = id, 
+              retain = last, keep_allVars = TRUE)
 
 ```
 
@@ -96,15 +102,15 @@ recode_apply_data
 
 dplyr::case_match(recode_apply_data$rank, !!!recode_key_apply(value = 1:10, 
                   label = c("first", "second", "third", "fourth",
-                            "fifth", "sixth", "seventh", "eighth", 
-                            "ninth","tenth")))
+                           "fifth", "sixth", "seventh", "eighth", 
+                           "ninth","tenth")))
 
 ```
 
 
 ### Extract matched string from a vector with `str_match_extract()`
 
-`str_match_extract()` is a function that is similar to `str_extract()` from the stringr package. Using ``str_match_extract()` you can search for and extract matched string from a vector.
+`str_match_extract()` is a function that is similar to `str_extract()` from the stringr package. Using `str_match_extract()` you can search for and extract matched string from a vector.
 
 ```{r}
 
@@ -114,10 +120,11 @@ what are your plans after graduation? Choose up to 2 responses.",
 "How did you learn about the REU? Select all that apply.",
 "This should return NA"))
 
-string_to_search$extracted_string <- str_match_extract(object = string_to_search$orig_varLabel,
-objectDictionary = string_to_match)
+string_to_search$extracted_string <- 
+  str_match_extract(object = string_to_search$orig_varLabel,
+                    objectDictionary = string_to_match)
 
-string_to_search
+string_to_search$extracted_string
 
 ```
 
