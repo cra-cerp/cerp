@@ -1,4 +1,7 @@
-#' Function to create factor levels for recoding.
+#' Function to create factor levels
+#'
+#' @description This function can be used to create factor levels for variables
+#' in a data frame or tibble.
 #'
 #' @importFrom cerp rename_cols
 #' @importFrom cerp vulist

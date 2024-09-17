@@ -1,4 +1,6 @@
-#' Function to escape punctuation for regex search .
+#' Function to escape punctuation in string
+#'
+#' @description This function can be used to escape escape punctuation in string.
 #'
 #' @param x a character vector.
 #'

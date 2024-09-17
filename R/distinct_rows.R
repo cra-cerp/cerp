@@ -1,4 +1,7 @@
-#' A function that is similar to the dplyr::distinct() function using Base R
+#' A function to retain/keep unique rows
+#'
+#' @description This function is similar to dplyr's distinct() function and can be used to
+#' retain distinct/unique rows.
 #'
 #' @param dataset A tibble or data frame.
 #' @param column A key column.

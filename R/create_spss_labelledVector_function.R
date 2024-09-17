@@ -1,7 +1,8 @@
-#' Function for quickly generating SPSS labelled vector using haven.
+#' Function for quickly generating SPSS labelled vector using haven
 #'
-#' @description User can either provide codebook inputs OR specify inputs, but not both.
-#' See inputs below.
+#' @description This function can be used to quickly generate an SPSS labelled vector using
+#' labelled_spss from the haven package. Users can either provide codebook inputs OR specify
+#' inputs, but not both.
 #'
 #' @importFrom haven labelled_spss
 #' @importFrom rlang parse_expr

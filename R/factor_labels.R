@@ -1,4 +1,7 @@
-#' Function to create factor labels for recoding.
+#' Function to create factor labels
+#'
+#' @description This function can be used to create factor labels for variables
+#' in a data frame or tibble.
 #'
 #' @importFrom cerp rename_cols
 #' @importFrom cerp vlulist

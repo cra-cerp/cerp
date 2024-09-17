@@ -1,5 +1,8 @@
 #' Identify duplicates in a column and tag with each matched element's row number.
 #'
+#' @description This function can be used to identify and tag duplicates in a
+#' given tibble or data frame column.
+#'
 #' @param dataSet A tibble or data frame object.
 #' @param columnName A character vector containing the name of the column to search for
 #' duplicates. NOTE: the column names can be passed with or without quotes, so long as

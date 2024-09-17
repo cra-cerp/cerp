@@ -1,5 +1,8 @@
 #' General function for creating pushed/global vector of values
 #'
+#' @description This function can be used to find and retain the most recent
+#' response for a record.
+#'
 #' @importFrom mgsub mgsub
 #' @importFrom cerp escape_punct
 #'

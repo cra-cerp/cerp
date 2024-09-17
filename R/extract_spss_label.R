@@ -1,4 +1,7 @@
-#' Function for extracting question/variable labels for variables/columns from an SPSS data set
+#' Function for extracting variable labels from an SPSS data set
+#'
+#' @description This function can be used to extract question/variable labels from
+#' an SPSS data set.
 #'
 #' @importFrom tibble is_tibble
 #' @importFrom cerp escape_punct
