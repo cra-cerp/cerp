@@ -4,7 +4,7 @@ output: rmarkdown::html_vignette
 description: >
   This document introduces you to cerp's most frequently used tools, and shows you how to apply them to data frames.
 vignette: >
-  %\VignetteIndexEntry{introduction}
+  %\VignetteIndexEntry{Introduction to cerp}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
