@@ -1,0 +1,939 @@
+names(quicklyRename_dat) <- quicklyRenameVars(dataSet = quicklyRename_dat,
+codeBook = quicklyRename_codebook, currentVar = names(quicklyRename_dat),
+oldNameCol = "oldNames", newNameCol = "newNames")
+quicklyRename_dat
+quicklyRenameVars <- function(dataSet, codeBook, currentVar, oldNameCol, newNameCol){#
+	unlist(sapply(currentVar, function(currentName){#
+		currentRow <- codeBook[grepl(paste0("^", currentName,"$"), codeBook[[oldNameCol]]),]#
+		if(length(currentRow[[newNameCol]]) == 0){#
+		currentName#
+		} else{#
+			currentRow[[newNameCol]]#
+			}#
+	}))#
+	}
+quicklyRename_dat <- as.data.frame(matrix(data = NA, nrow = 1, ncol = 5))
+quicklyRename_codebook <- data.frame(oldNames = paste0("V", 1:4), newNames = paste0("question_",1:4))
+quicklyRenameVars(dataSet = quicklyRename_dat,#
+codeBook = quicklyRename_codebook, currentVar = names(quicklyRename_dat),#
+oldNameCol = "oldNames", newNameCol = "newNames")
+names(quicklyRename_dat) <- quicklyRenameVars(dataSet = quicklyRename_dat,
+codeBook = quicklyRename_codebook, currentVar = names(quicklyRename_dat),
+oldNameCol = "oldNames", newNameCol = "newNames")
+quicklyRename_dat
+quicklyRenameVars <- function(dataSet, codeBook, currentVar, oldNameCol, newNameCol){#
+	# find new names#
+	newNames <- sapply(currentVar, function(currentName){#
+		# find row in codebook#
+		currentRow <- codeBook[grepl(paste0("^", currentName,"$"), codeBook[[oldNameCol]]),]#
+		# return new name if it exists#
+		if(length(currentRow[[newNameCol]]) == 0){#
+		currentName#
+		} else{#
+			currentRow[[newNameCol]]#
+			}#
+	}))#
+	# unlist new names#
+	unlist(newNames)#
+	}
+quicklyRenameVars <- function(dataSet, codeBook, currentVar, oldNameCol, newNameCol){#
+	# find new names#
+	newNames <- sapply(currentVar, function(currentName){#
+		# find row in codebook#
+		currentRow <- codeBook[grepl(paste0("^", currentName,"$"), codeBook[[oldNameCol]]),]#
+		# return new name if it exists#
+		if(length(currentRow[[newNameCol]]) == 0){#
+		currentName#
+		} else{#
+			currentRow[[newNameCol]]#
+			}#
+	})#
+	# unlist new names#
+	unlist(newNames)#
+	}
+quicklyRename_dat <- as.data.frame(matrix(data = NA, nrow = 1, ncol = 5))
+quicklyRename_codebook <- data.frame(oldNames = paste0("V", 1:4), newNames = paste0("question_",1:4))
+quicklyRename_dat
+quicklyRenameVars(dataSet = quicklyRename_dat,
+codeBook = quicklyRename_codebook, currentVar = names(quicklyRename_dat),
+oldNameCol = "oldNames", newNameCol = "newNames")
+names(quicklyRename_dat) <- quicklyRenameVars(dataSet = quicklyRename_dat,
+codeBook = quicklyRename_codebook, currentVar = names(quicklyRename_dat),
+oldNameCol = "oldNames", newNameCol = "newNames")
+quicklyRename_dat
+quicklyRename_dat <- as.data.frame(matrix(data = NA, nrow = 1, ncol = 5))
+quicklyRename_codebook <- data.frame(oldNames = paste0("V", 4:1), newNames = paste0("question_",4:1))
+quicklyRename_codebook
+quicklyRename_dat
+quicklyRenameVars(dataSet = quicklyRename_dat,
+codeBook = quicklyRename_codebook, currentVar = names(quicklyRename_dat),
+oldNameCol = "oldNames", newNameCol = "newNames")
+?sapply
+str_match_extract <- function(object, objectDictionary, ...){#
+# check that both supplied inputs are VECTORS#
+checkVector <- c(ifelse(is.vector(object), "Proceed", "The object you would like to check for string matches is not of type vector."),#
+ ifelse(is.vector(objectDictionary), "Proceed", "The objectDictionary you would like to use to extract matched string from is not of type vector."))#
+#
+# if either are not vectors stop + print message#
+if(any(checkVector != "Proceed"))#
+	stop(paste(c("\n", paste0(checkVector[which(checkVector != "Proceed")], collapse = "\n"))))#
+#
+## extract other specified arguments (these are optional)#
+dotsLength <- list(...)#
+if(length(dotsLength) != 0){#
+  dotList <- unlist(dotsLength)#
+  objectEscape <- dotList[grepl("objectescape", tolower(names(dotList)))]#
+  objectDictEscape <- dotList[grepl("objectdictescape", tolower(names(dotList)))]#
+  specialRun <- dotList[grepl("specialrun", tolower(names(dotList)))]#
+} else{#
+  dotList <- NULL#
+}#
+#
+## otherwise set these inputs to null/pre-determined string#
+objectEscape <- if(is.null(dotList) | !any(grepl("objectescape", tolower(names(dotList))))){FALSE} else{objectEscape}#
+objectDictEscape <- if(is.null(dotList) | !any(grepl("objectdictescape", tolower(names(dotList))))){FALSE} else{objectDictEscape}#
+specialRun <- if(is.null(dotList) | !any(grepl("specialrun", tolower(names(dotList))))){FALSE} else{specialRun}#
+#
+# clean object dictionary (questioning: only for survey question cases)#
+objectDictionary <- gsub("\\$.*\\{.*\\}.*", "", objectDictionary)#
+#
+# escape punctuations#
+if(objectEscape){object <- escape_punct(object)}#
+if(objectDictEscape){objectDictionary <- escape_punct(objectDictionary)}#
+#
+# begin find/match and extract#
+unlist(lapply(seq_along(object), function(i){#
+  match_found <- regmatches(object[i],gregexpr(paste0(tolower(objectDictionary), collapse = "|"),ignore.case = TRUE, object[i]))#
+  if(length(match_found) == 0){#
+  	NA#
+  	} else{#
+  		if(isTRUE(specialRun)){#
+  			toReturn <- regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"), ignore.case = TRUE, object[i]))#
+  			paste0(unlist(toReturn), collapse = "; ")#
+  		} else{#
+  			regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"), ignore.case = TRUE, object[i]))#
+  		}#
+  	}#
+  }))#
+}
+string_to_extract <- c("Choose up to 2 responses.", "Select all that apply.")
+string_to_search <- data.frame(orig_varLabel = c("After you complete your current program,
+what are your plans after graduation? Choose up to 2 responses.",
+"How did you learn about the REU you participated in? Select all that apply."))
+string_to_extract
+string_to_search
+str_match_extract(object = string_to_search$orig_varLabel,
+objectDictionary = string_to_extract)
+string_to_search$extracted_string <- str_match_extract(object = string_to_search$orig_varLabel,
+objectDictionary = string_to_extract)
+string_to_search
+str_match_extract(object = c("I bought 3 apples", "There were four students",
+"12 teachers completed the program"), objectDictionary = "[0-9]")
+str_match_extract(object = c("I bought 3 apples", "There were four students",
+"12 teachers completed the program"), objectDictionary = "[1-9][0-9]*")
+schoolData <- data.frame(observation =  c("I bought 3 apples", "There were four students",
+' "12 teachers completed the program"))
+""
+''
+schoolData <- data.frame(observation =  c("I bought 3 apples", "There were four students",
+"12 teachers completed the program"))
+schoolData
+schoolData$match <- str_match_extract(object = schoolData$observation,  objectDictionary = "[1-9][0-9]*")
+schoolData
+schoolData$match
+str_match_extract(object = schoolData$observation,  objectDictionary = "[1-9][0-9]*")
+schoolData$match <- str_match_extract(object = schoolData$observation,  objectDictionary = "[1-9][0-9]*")
+object = schoolData$observation
+objectDictionary = "[1-9][0-9]*"
+# check that both supplied inputs are VECTORS#
+checkVector <- c(ifelse(is.vector(object), "Proceed", "The object you would like to check for string matches is not of type vector."),#
+ ifelse(is.vector(objectDictionary), "Proceed", "The objectDictionary you would like to use to extract matched string from is not of type vector."))#
+#
+# if either are not vectors stop + print message#
+if(any(checkVector != "Proceed"))#
+	stop(paste(c("\n", paste0(checkVector[which(checkVector != "Proceed")], collapse = "\n"))))
+checkVector
+specialRun = FALSE
+objectDictionary <- gsub("\\$.*\\{.*\\}.*", "", objectDictionary)
+objectDictionary
+object
+i = 2
+match_found <- regmatches(object[i],gregexpr(paste0(tolower(objectDictionary), collapse = "|"),ignore.case = TRUE, object[i]))
+match_found
+length(match_found) == 0
+match_found
+length(match_found)
+unlist(match_found)
+length(unlist(match_found))
+match_found  <- unlist(match_found)
+specialRun
+if(length(match_found) == 0){#
+  	NA#
+  	} else{#
+  		if(isTRUE(specialRun)){#
+  			toReturn <- regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"), ignore.case = TRUE, object[i]))#
+  			paste0(unlist(toReturn), collapse = "; ")#
+  		} else{#
+  			regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"), ignore.case = TRUE, object[i]))#
+  		}#
+  	}
+str_match_extract <- function(object, objectDictionary, ...){#
+# check that both supplied inputs are VECTORS#
+checkVector <- c(ifelse(is.vector(object), "Proceed", "The object you would like to check for string matches is not of type vector."),#
+ ifelse(is.vector(objectDictionary), "Proceed", "The objectDictionary you would like to use to extract matched string from is not of type vector."))#
+#
+# if either are not vectors stop + print message#
+if(any(checkVector != "Proceed"))#
+	stop(paste(c("\n", paste0(checkVector[which(checkVector != "Proceed")], collapse = "\n"))))#
+#
+## extract other specified arguments (these are optional)#
+dotsLength <- list(...)#
+if(length(dotsLength) != 0){#
+  dotList <- unlist(dotsLength)#
+  objectEscape <- dotList[grepl("objectescape", tolower(names(dotList)))]#
+  objectDictEscape <- dotList[grepl("objectdictescape", tolower(names(dotList)))]#
+  specialRun <- dotList[grepl("specialrun", tolower(names(dotList)))]#
+} else{#
+  dotList <- NULL#
+}#
+#
+## otherwise set these inputs to null/pre-determined string#
+objectEscape <- if(is.null(dotList) | !any(grepl("objectescape", tolower(names(dotList))))){FALSE} else{objectEscape}#
+objectDictEscape <- if(is.null(dotList) | !any(grepl("objectdictescape", tolower(names(dotList))))){FALSE} else{objectDictEscape}#
+specialRun <- if(is.null(dotList) | !any(grepl("specialrun", tolower(names(dotList))))){FALSE} else{specialRun}#
+#
+# clean object dictionary (questioning: only for survey question cases)#
+objectDictionary <- gsub("\\$.*\\{.*\\}.*", "", objectDictionary)#
+#
+# escape punctuations#
+if(objectEscape){object <- escape_punct(object)}#
+if(objectDictEscape){objectDictionary <- escape_punct(objectDictionary)}#
+#
+# begin find/match and extract#
+unlist(lapply(seq_along(object), function(i){#
+  match_found <- regmatches(object[i],gregexpr(paste0(tolower(objectDictionary), collapse = "|"),ignore.case = TRUE, object[i]))#
+  match_found  <- unlist(match_found)#
+  if(length(match_found) == 0){#
+  	NA#
+  	} else{#
+  		if(isTRUE(specialRun)){#
+  			toReturn <- regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"), ignore.case = TRUE, object[i]))#
+  			paste0(unlist(toReturn), collapse = "; ")#
+  		} else{#
+  			regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"), ignore.case = TRUE, object[i]))#
+  		}#
+  	}#
+  }))#
+}
+schoolData <- data.frame(observation =  c("I bought 3 apples", "There were four students",
+"12 teachers completed the program"))
+schoolData$match <- str_match_extract(object = schoolData$observation,  objectDictionary = "[1-9][0-9]*")
+schoolData
+string_to_extract <- c("Choose up to 2 responses.", "Select all that apply.")
+string_to_search <- data.frame(orig_varLabel = c("After you complete your current program,
+what are your plans after graduation? Choose up to 2 responses.",
+"How did you learn about the REU you participated in? Select all that apply.", "This should return NA"))
+string_to_search
+string_to_match <- c("Choose up to 2 responses.", "Select all that apply.")
+string_to_search$extracted_string <- str_match_extract(object = string_to_search$orig_varLabel,
+objectDictionary = string_to_match)
+string_to_search
+str_match_extract <- function(object, objectDictionary, ...){#
+# check that both supplied inputs are VECTORS#
+checkVector <- c(ifelse(is.vector(object), "Proceed", "The object you would like to check for string matches is not of type vector."),#
+ ifelse(is.vector(objectDictionary), "Proceed", "The objectDictionary you would like to use to extract matched string from is not of type vector."))#
+#
+# if either are not vectors stop + print message#
+if(any(checkVector != "Proceed"))#
+	stop(paste(c("\n", paste0(checkVector[which(checkVector != "Proceed")], collapse = "\n"))))#
+#
+## extract other specified arguments (these are optional)#
+dotsLength <- list(...)#
+if(length(dotsLength) != 0){#
+  dotList <- unlist(dotsLength)#
+  objectEscape <- dotList[grepl("objectescape", tolower(names(dotList)))]#
+  objectDictEscape <- dotList[grepl("objectdictescape", tolower(names(dotList)))]#
+  specialRun <- dotList[grepl("specialrun", tolower(names(dotList)))]#
+} else{#
+  dotList <- NULL#
+}#
+#
+## otherwise set these inputs to null/pre-determined string#
+objectEscape <- if(is.null(dotList) | !any(grepl("objectescape", tolower(names(dotList))))){FALSE} else{objectEscape}#
+objectDictEscape <- if(is.null(dotList) | !any(grepl("objectdictescape", tolower(names(dotList))))){FALSE} else{objectDictEscape}#
+specialRun <- if(is.null(dotList) | !any(grepl("specialrun", tolower(names(dotList))))){FALSE} else{specialRun}#
+#
+# clean object dictionary (questioning: only for survey question cases)#
+objectDictionary <- gsub("\\$.*\\{.*\\}.*", "", objectDictionary)#
+#
+# escape punctuations#
+if(objectEscape){object <- escape_punct(object)}#
+if(objectDictEscape){objectDictionary <- escape_punct(objectDictionary)}#
+#
+# begin find/match and extract#
+unlist(lapply(seq_along(object), function(i){#
+  match_found <- unlist(regmatches(object[i],gregexpr(paste0(tolower(objectDictionary), collapse = "|"),#
+  												ignore.case = TRUE, object[i])))#
+  if(length(match_found) == 0){#
+  	NA#
+  	} else{#
+  		if(isTRUE(specialRun)){#
+  			toReturn <- regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"), ignore.case = TRUE, object[i]))#
+  			paste0(unlist(toReturn), collapse = "; ")#
+  		} else{#
+  			regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"), ignore.case = TRUE, object[i]))#
+  		}#
+  	}#
+  }))#
+}
+string_to_match <- c("Choose up to 2 responses.", "Select all that apply.")#
+string_to_search <- data.frame(orig_varLabel = c("After you complete your current program,#
+what are your plans after graduation? Choose up to 2 responses. Select all that apply",#
+"How did you learn about the REU you participated in? Select all that apply.", "This should return NA"))#
+string_to_search$extracted_string <- str_match_extract(object = string_to_search$orig_varLabel,#
+objectDictionary = string_to_match)
+string_to_search
+string_to_match <- c("Choose up to 2 responses.", "Select all that apply.")#
+string_to_search <- data.frame(orig_varLabel = c("After you complete your current program,#
+what are your plans after graduation? Choose up to 2 responses. Select all that apply",#
+"How did you learn about the REU you participated in? Select all that apply.", "This should return NA"))#
+string_to_search$extracted_string <- str_match_extract(object = string_to_search$orig_varLabel,#
+objectDictionary = string_to_match, specialRun = TRUE)
+string_to_search
+string_to_match <- c("Choose up to 2 responses.", "Select all that apply.", "Select all that apply")#
+string_to_search <- data.frame(orig_varLabel = c("After you complete your current program,#
+what are your plans after graduation? Choose up to 2 responses. Select all that apply",#
+"How did you learn about the REU you participated in? Select all that apply.", "This should return NA"))#
+string_to_search$extracted_string <- str_match_extract(object = string_to_search$orig_varLabel,#
+objectDictionary = string_to_match, specialRun = TRUE)
+string_to_search
+string_to_search$extracted_string <- str_match_extract(object = string_to_search$orig_varLabel,#
+objectDictionary = string_to_match, specialRun = FALSE)
+str_match_extract(object = string_to_search$orig_varLabel,#
+objectDictionary = string_to_match, specialRun = FALSE)
+string_to_search$extracted_string <- str_match_extract(object = string_to_search$orig_varLabel,#
+objectDictionary = string_to_match, specialRun = TRUE)
+string_to_search
+string_to_match2 <- c("Choose up to 2 responses.", "Select all that apply.", "Select all that apply")#
+string_to_search2 <- data.frame(orig_varLabel = c("After you complete your current program,#
+what are your plans after graduation? Choose up to 2 responses. Select all that apply",#
+"How did you learn about the REU you participated in? Select all that apply.", "This should return NA"))#
+string_to_search2$extracted_string <- str_match_extract(object = string_to_search2$orig_varLabel,#
+objectDictionary = string_to_match2, specialRun = TRUE)
+string_to_match2
+string_to_search2
+#' A function for extracting matched string from a character vector.#
+#'#
+#' @description#
+#' This function is similar to str_extract from stringr. NOTE: case is ignored when matches are sought.#
+#'#
+#' @param object a vector to search for match string#
+#' @param objectDictionary character vector to match in object#
+#' @param objectEscape TRUE/FALSE; an optional argument that when set to TRUE escapes all punctuation#
+#' in the object to search#
+#' @param objectDictEscape TRUE/FALSE; an optional argument that when set to TRUE escapes all punctuation#
+#' in the object dictionary#
+#' @param specialRun TRUE/FALSE; an optional argument that when set to TRUE will return all matched string#
+#' separated by a semi-colon (e.g., match1; match2; match3)#
+#'#
+#' @examples#
+#' # An example using text#
+#' string_to_match <- c("Choose up to 2 responses.", "Select all that apply.")#
+#' string_to_search <- data.frame(orig_varLabel = c("After you complete your current program,#
+#' what are your plans after graduation? Choose up to 2 responses.",#
+#' "How did you learn about the REU you participated in? Select all that apply.", "This should return NA"))#
+#' string_to_search$extracted_string <- str_match_extract(object = string_to_search$orig_varLabel,#
+#' objectDictionary = string_to_match)#
+#'#
+#' # An example using digits/numbers#
+#' schoolData <- data.frame(observation =  c("I bought 3 apples", "There were four students",#
+# ' "12 teachers completed the program"))#
+#' schoolData$match <- str_match_extract(object = schoolData$observation,  objectDictionary = "[1-9][0-9]*")#
+#'#
+#' # An example returning multiple matched string#
+#' string_to_match2 <- c("Choose up to 2 responses.", "Select all that apply.", "Select all that apply")#
+#' string_to_search2 <- data.frame(orig_varLabel = c("After you complete your current program,#
+#' what are your plans after graduation? Choose up to 2 responses. Select all that apply",#
+#' "How did you learn about the REU you participated in? Select all that apply.", "This should return NA"))#
+#' string_to_search2$extracted_string <- str_match_extract(object = string_to_search2$orig_varLabel,#
+#' objectDictionary = string_to_match2, specialRun = TRUE)#
+#'#
+str_match_extract <- function(object, objectDictionary, ...){#
+# check that both supplied inputs are VECTORS#
+checkVector <- c(ifelse(is.vector(object), "Proceed", "The object you would like to check for string matches is not of type vector."),#
+ ifelse(is.vector(objectDictionary), "Proceed", "The objectDictionary you would like to use to extract matched string from is not of type vector."))#
+#
+# if either are not vectors stop + print message#
+if(any(checkVector != "Proceed"))#
+	stop(paste(c("\n", paste0(checkVector[which(checkVector != "Proceed")], collapse = "\n"))))#
+#
+## extract other specified arguments (these are optional)#
+dotsLength <- list(...)#
+if(length(dotsLength) != 0){#
+  dotList <- unlist(dotsLength)#
+  objectEscape <- dotList[grepl("objectescape", tolower(names(dotList)))]#
+  objectDictEscape <- dotList[grepl("objectdictescape", tolower(names(dotList)))]#
+  specialRun <- dotList[grepl("specialrun", tolower(names(dotList)))]#
+} else{#
+  dotList <- NULL#
+}#
+#
+## otherwise set these inputs to null/pre-determined string#
+objectEscape <- if(is.null(dotList) | !any(grepl("objectescape", tolower(names(dotList))))){FALSE} else{objectEscape}#
+objectDictEscape <- if(is.null(dotList) | !any(grepl("objectdictescape", tolower(names(dotList))))){FALSE} else{objectDictEscape}#
+specialRun <- if(is.null(dotList) | !any(grepl("specialrun", tolower(names(dotList))))){FALSE} else{specialRun}#
+#
+# clean object dictionary (questioning: only for survey question cases)#
+objectDictionary <- gsub("\\$.*\\{.*\\}.*", "", objectDictionary)#
+#
+# escape punctuations#
+if(objectEscape){object <- escape_punct(object)}#
+if(objectDictEscape){objectDictionary <- escape_punct(objectDictionary)}#
+#
+# begin find/match and extract#
+unlist(lapply(seq_along(object), function(i){#
+  match_found <- unlist(regmatches(object[i],gregexpr(paste0(tolower(objectDictionary), collapse = "|"),#
+  									  ignore.case = TRUE, object[i])))#
+  if(length(match_found) == 0){#
+  	NA#
+  	} else{#
+  		if(isTRUE(specialRun)){#
+  			toReturn <- regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"), #
+  													ignore.case = TRUE, object[i]))#
+  			paste0(unlist(toReturn), collapse = "; ")#
+  		} else{#
+  			regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"), ignore.case = TRUE, object[i]))#
+  		}#
+  	}#
+  }))#
+}
+string_to_match <- c("Choose up to 2 responses.", "Select all that apply.", "Select all that apply")#
+string_to_search <- data.frame(orig_varLabel = c("After you complete your current program,#
+what are your plans after graduation? Choose up to 2 responses. Select all that apply",#
+"How did you learn about the REU you participated in? Select all that apply.", "This should return NA"))#
+string_to_search$extracted_string <- str_match_extract(object = string_to_search$orig_varLabel,#
+objectDictionary = string_to_match, specialRun = TRUE)
+string_to_search
+str_match_extract(object = string_to_search$orig_varLabel,#
+objectDictionary = string_to_match, specialRun = FALSE)
+str_match_extract(object = string_to_search,#
+objectDictionary = string_to_match, specialRun = FALSE)
+str_match_extract(object = string_to_search$orig_varLabel,#
+objectDictionary = string_to_search, specialRun = FALSE)
+rename_cols <- function(x, ...){#
+  # extract from dots#
+  dotsLength <- list(...)#
+  if(length(dotsLength) != 0){#
+    dotList <- unlist(dotsLength)#
+    groupFlag <- dotList[grep("^groupflag$", tolower(names(dotList)))]#
+  } else{#
+    dotList <- NULL#
+  }#
+#
+  # otherwise set these inputs to null/pre-determined string#
+  groupFlag <- if(is.null(dotList) | !any(grepl("^groupflag$", tolower(names(dotList))))){"_w\\d$"} else{groupFlag}#
+#
+  # remove group/time flag#
+	gsub(x = x, pattern = groupFlag, replacement ="")#
+	}
+temp_dat <- data.frame(variable_name = c("sex_w1","sex_w2","sex"))
+temp_dat$varStem <- rename_cols(x = temp_dat$variable_name)
+temp_dat
+temp_dat2 <- data.frame(variable_name = c("highestDeg_it_time1", "csBackground_newProgLang",
+"mentorSupport_ideas_time2"))
+temp_dat2$varStem <- rename_cols(x = temp_dat2$variable_name, groupFlag = "_time\\d")
+temp_dat2
+timeFlag_cols <- function(x, ...){#
+# extract from dots#
+dotsLength <- list(...)#
+if(length(dotsLength) != 0){#
+  dotList <- unlist(dotsLength)#
+  groupFlag <- dotList[grep("^groupflag$", tolower(names(dotList)))]#
+} else{#
+  dotList <- NULL#
+  }#
+#
+# otherwise set these inputs to null/pre-determined string#
+groupFlag <- if(is.null(dotList) | !any(grepl("^groupflag$", tolower(names(dotList))))){"_w\\d$"} else{groupFlag}#
+#
+# check for time/group flag#
+if(grepl(x = x, pattern = groupFlag)){#
+		toReplace <- unlist(strsplit(x = x, split = groupFlag))#
+		gsub(pattern = paste0(toReplace,"_"), replacement = "", x = x)#
+	} else{#
+		"globalVar"#
+		}#
+}#
+#
+timeFlag_cols <- Vectorize(FUN = timeFlag_cols, vectorize.args = "x")
+temp_dat <- data.frame(variable_name = c("sex_w1","sex_w2","sex"))
+temp_dat$timeFlag <- timeFlag_cols(x = temp_dat$variable_name)
+temp_dat
+timeFlag_cols <- function(x, ...){#
+# extract from dots#
+dotsLength <- list(...)#
+if(length(dotsLength) != 0){#
+  dotList <- unlist(dotsLength)#
+  groupFlag <- dotList[grep("^groupflag$", tolower(names(dotList)))]#
+} else{#
+  dotList <- NULL#
+  }#
+#
+# otherwise set these inputs to null/pre-determined string#
+groupFlag <- if(is.null(dotList) | !any(grepl("^groupflag$", tolower(names(dotList))))){"_w\\d$"} else{groupFlag}#
+#
+# iterate over x to find group/time flags#
+sapply(x, function(find_groupFlag){#
+	# check for time/group flag#
+	if(grepl(x = find_groupFlag, pattern = groupFlag)){#
+		toReplace <- unlist(strsplit(x = find_groupFlag, split = groupFlag))#
+		gsub(pattern = paste0(toReplace,"_"), replacement = "", x = find_groupFlag)#
+	} else{#
+		"globalVar"#
+		}#
+})#
+#
+}
+temp_dat <- data.frame(variable_name = c("sex_w1","sex_w2","sex"))
+temp_dat$timeFlag <- timeFlag_cols(x = temp_dat$variable_name)
+temp_dat
+rm(temp_dat)
+temp_dat
+temp_dat <- data.frame(variable_name = c("sex_w1","sex_w2","sex"))
+temp_dat$timeFlag <- timeFlag_cols(x = temp_dat$variable_name)
+temp_dat
+temp_dat2 <- data.frame(variable_name = c("highestDeg_it_time1", "csBackground_newProgLang",
+"mentorSupport_ideas_time2"))
+temp_dat2
+temp_dat2$timeFlag <- timeFlag_cols(x = temp_dat2$variable_name, groupFlag = "_time\\d")
+temp_dat2
+temp_dat2 <- data.frame(variable_name = c("highestDeg_it_group1", "csBackground_newProgLang",
+"mentorSupport_group2"))
+temp_dat2$groupFlag <- timeFlag_cols(x = temp_dat2$variable_name, groupFlag = "_group\\d")
+temp_dat2
+timeFlag_cols(x = temp_dat2$variable_name, groupFlag = "_group\\d")
+typeof(timeFlag_cols(x = temp_dat2$variable_name, groupFlag = "_group\\d")#
+)
+splitChar <- function(vector, split, elementToKeep, ...){#
+  ## extract other specified arguments (these are optional)#
+  dotsLength <- list(...)#
+  if(length(dotsLength) != 0){#
+    dotList <- unlist(dotsLength)#
+    addDelim <- dotList[grepl("adddelim", tolower(names(dotList)))]#
+  } else{#
+    dotList <- NULL#
+  }#
+#
+  ## otherwise set these inputs to null/pre-determined string#
+  addDelim <- if(is.null(dotList) | !any(grepl("adddelim", tolower(names(dotList))))){""} else{addDelim}#
+  ## main manipulation#
+	splitStr <- unlist(strsplit(vector, split))[elementToKeep]#
+	splitStr <- trimws(splitStr)#
+	splitStr <- splitStr[!is.na(splitStr)]#
+#
+	## to return#
+	paste0(splitStr, collapse = addDelim)#
+	}#
+#
+splitChar <- Vectorize(FUN = splitChar, vectorize.args = "vector", USE.NAMES = FALSE)
+name_data <- data.frame(full_name = c("Linda E. Evans", "Akua Taylor Offor", "Heather M. Lutz"))
+name_data$first_middle <- splitChar(vector = name_data$full_name, split = " ", elementToKeep = 1:2,
+addDelim = " ")
+name_data
+splitChar <- function(vector, split, elementToKeep, ...){#
+  ## extract other specified arguments (these are optional)#
+  dotsLength <- list(...)#
+  if(length(dotsLength) != 0){#
+    dotList <- unlist(dotsLength)#
+    addDelim <- dotList[grepl("adddelim", tolower(names(dotList)))]#
+  } else{#
+    dotList <- NULL#
+  }#
+#
+  ## otherwise set these inputs to null/pre-determined string#
+  addDelim <- if(is.null(dotList) | !any(grepl("adddelim", tolower(names(dotList))))){""} else{addDelim}#
+#
+  ## main manipulation#
+  # iterate over vector#
+  sapply(vector, funtion(currentVec){#
+  	# unlist and split + keep select elements#
+  	splitStr <- unlist(strsplit(currentVec, split))[elementToKeep]#
+	splitStr <- trimws(splitStr)#
+	splitStr <- splitStr[!is.na(splitStr)]#
+#
+	# to return#
+	paste0(splitStr, collapse = addDelim)#
+#
+  })#
+		}
+splitChar <- function(vector, split, elementToKeep, ...){#
+  ## extract other specified arguments (these are optional)#
+  dotsLength <- list(...)#
+  if(length(dotsLength) != 0){#
+    dotList <- unlist(dotsLength)#
+    addDelim <- dotList[grepl("adddelim", tolower(names(dotList)))]#
+  } else{#
+    dotList <- NULL#
+  }#
+#
+  ## otherwise set these inputs to null/pre-determined string#
+  addDelim <- if(is.null(dotList) | !any(grepl("adddelim", tolower(names(dotList))))){""} else{addDelim}#
+#
+  ## main manipulation#
+  # iterate over vector#
+  sapply(vector, funtion(currentVec){#
+  	# unlist and split + keep select elements#
+  	splitStr <- unlist(strsplit(currentVec, split))[elementToKeep]#
+	splitStr <- trimws(splitStr)#
+	splitStr <- splitStr[!is.na(splitStr)]#
+#
+	# to return#
+	paste0(splitStr, collapse = addDelim)#
+  })#
+}
+splitChar <- function(vector, split, elementToKeep, ...){#
+  ## extract other specified arguments (these are optional)#
+  dotsLength <- list(...)#
+  if(length(dotsLength) != 0){#
+    dotList <- unlist(dotsLength)#
+    addDelim <- dotList[grepl("adddelim", tolower(names(dotList)))]#
+  } else{#
+    dotList <- NULL#
+  }#
+#
+  ## otherwise set these inputs to null/pre-determined string#
+  addDelim <- if(is.null(dotList) | !any(grepl("adddelim", tolower(names(dotList))))){""} else{addDelim}#
+#
+  ## main manipulation#
+  # iterate over vector#
+  sapply(vector, function(currentVec){#
+  	# unlist and split + keep select elements#
+  	splitStr <- unlist(strsplit(currentVec, split))[elementToKeep]#
+	splitStr <- trimws(splitStr)#
+	splitStr <- splitStr[!is.na(splitStr)]#
+#
+	# to return#
+	paste0(splitStr, collapse = addDelim)#
+  })#
+}
+city_data <- data.frame(city_state = c("Baltimore, Maryland", "Raleigh, North Carolina", "Philadelphia, Pennsylvania"))
+city_data$City <- splitChar(vector = city_data$city_state, split = ",", elementToKeep = 1)
+city_data
+name_data <- data.frame(full_name = c("Linda E. Evans", "Akua Taylor Offor", "Heather M. Lutz"))
+name_data$first_middle <- splitChar(vector = name_data$full_name, split = " ", elementToKeep = 1,
+addDelim = " ")
+name_data
+city_data <- data.frame(city_state = c("Baltimore, Maryland", "Raleigh, North Carolina", "Philadelphia, Pennsylvania"))
+city_data$City <- splitChar(vector = city_data$city_state, split = ";", elementToKeep = 1:2)
+city_data
+city_data <- data.frame(city_state = c("Baltimore, Maryland", "Raleigh, North Carolina", "Philadelphia, Pennsylvania"))
+city_data$City <- splitChar(vector = city_data$city_state, split = ",", elementToKeep = 1:2, addDelim = ";")
+city_data
+htmlParser <- function(x){#
+	# replace characters#
+	x <- mgsub::mgsub(x, pattern = c("<[^>]+>","  ","&rdquo;","&ldquo;","&amp;","&rsquo;","&lsquo;",#
+	                                "&#39;","‚Äô","&quot;","[^ -~]+"),#
+	                 replacement = c("" , " ","'","'","'","'","'","'","'","'"," "))#
+  # double check on the blank spaces#
+	newX <- trimws(x, which = "both")#
+	# strip remaining html#
+	tryCatch({rvest::html_text(rvest::read_html(newX))}, error = function(e){ return(newX)})#
+}
+html_test <- "<html>\n<body>\n\n<p><b>This text is bold.</b></p>\n<p><i>This text is italic.</i></p>\n<p>This is<sub>
+subscript</sub> and <sup>superscript.</sup></p>\n\n</body>\n</html>\n\n"
+htmlParser(html_test)
+rm(html_test)
+html_test <- "<html>\n<body>\n\n<p><b>This text is bold.</b></p>\n<p><i>This text is italic.</i></p>\n<p>This is<sub>
+subscript</sub> and <sup>superscript.</sup></p>\n\n</body>\n</html>\n\n"
+htmlParser(html_test)
+stringr::str_squish(htmlParser(html_test))
+htmlParser <- function(x){#
+	# replace characters#
+	x <- mgsub::mgsub(x, pattern = c("<[^>]+>","  ","&rdquo;","&ldquo;","&amp;","&rsquo;","&lsquo;",#
+	                                "&#39;","‚Äô","&quot;","[^ -~]+"),#
+	                 replacement = c("" , " ","'","'","'","'","'","'","'","'"," "))#
+  # double check on the blank spaces#
+	newX <- trimws(x, which = "both")#
+	# strip remaining html#
+	tryCatch({stringr::str_squish(rvest::html_text(rvest::read_html(newX)))}, error = function(e){ return(newX)})#
+}
+htmlParser(html_test)
+htmlParser <- function(x){#
+	# replace characters#
+	x <- mgsub::mgsub(x, pattern = c("<[^>]+>","  ","&rdquo;","&ldquo;","&amp;","&rsquo;","&lsquo;",#
+	                                "&#39;","‚Äô","&quot;","[^ -~]+"),#
+	                 replacement = c("" , " ","'","'","'","'","'","'","'","'"," "))#
+  # double check on the blank spaces#
+	newX <- trimws(x, which = "both")#
+	# strip remaining html#
+	newX2 <- tryCatch({rvest::html_text(rvest::read_html(newX))}, error = function(e){ return(newX)})#
+	# str_squish#
+	string::str_squish(newX2)#
+}
+htmlParser(html_test)
+htmlParser <- function(x){#
+	# replace characters#
+	x <- mgsub::mgsub(x, pattern = c("<[^>]+>","  ","&rdquo;","&ldquo;","&amp;","&rsquo;","&lsquo;",#
+	                                "&#39;","‚Äô","&quot;","[^ -~]+"),#
+	                 replacement = c("" , " ","'","'","'","'","'","'","'","'"," "))#
+  # double check on the blank spaces#
+	newX <- trimws(x, which = "both")#
+	# strip remaining html#
+	newX2 <- tryCatch({rvest::html_text(rvest::read_html(newX))}, error = function(e){ return(newX)})#
+	# str_squish#
+	stringr::str_squish(newX2)#
+}
+htmlParser(html_test)
+checkDuplicates <- function(dataSet, columnName, ...){#
+  dataSet <- as.data.frame(dataSet)#
+  dataSet$rowID <- 1:nrow(dataSet)#
+  ## extract other specified arguments (these are optional)#
+  dotsLength <- list(...)#
+  if(length(dotsLength) != 0){#
+    dotList <- unlist(dotsLength)#
+    splitDelim <- dotList[grepl("splitdelim", tolower(names(dotList)))]#
+  } else{#
+    dotList <- NULL#
+  }#
+  ## otherwise set these inputs to null/pre-determined string#
+  splitDelim <- if(is.null(dotList) | !any(grepl("splitdelim", tolower(names(dotList))))){NULL} else{splitDelim}#
+  sapply(seq_len(nrow(dataSet)), function(elementNo){#
+      currentRowNum <- dataSet[elementNo,"rowID"]#
+      currentRow <- dataSet[[columnName]][elementNo]#
+      currentRow <- if(is.null(splitDelim)){currentRow} else{trimws(unlist(strsplit(currentRow, splitDelim))) }#
+#
+      otherRowNum <- dataSet[-elementNo,"rowID"]#
+      allOtherRows  <- dataSet[[columnName]][-elementNo]#
+#
+      findDuplicate <- sapply(currentRow, function(x) grepl(paste0("\\b",tolower(x),"\\b"), tolower(allOtherRows)),#
+                              simplify  = FALSE)#
+      findDuplicate  <- as.data.frame(findDuplicate)#
+      findDuplicate$rowNum <- otherRowNum#
+      duplicateRowNums <- findDuplicate[["rowNum"]][unique(unlist(sapply(findDuplicate, grep, pattern = TRUE)))]#
+#
+      ifelse(length(duplicateRowNums) > 0,#
+             paste(sort(as.numeric(c(currentRowNum, duplicateRowNums))), collapse = ","), "")#
+#
+    })#
+#
+}
+colorData <- data.frame(colors = c("PurPle,Green", "blue", "Green", "blue", "RED","purple"))
+colorData$duplicates <- checkDuplicates(dataSet = colorData, columnName = "colors", splitDelim = ",")
+colorData
+checkDuplicates(dataSet = colorData, columnName = "colors", splitDelim = ",")
+letterData <- data.frame(letter = sample(letters[1:10], size = 10, replace = TRUE))
+letterData
+letterData$duplicates <- checkDuplicates(dataSet = letterData, columnName = "letter")
+letterData
+checkDuplicates <- function(dataSet, columnName, ...){#
+	columnName <- as.character(substitute(columnName))#
+	dataSet <- as.data.frame(dataSet)#
+	dataSet$rowID <- 1:nrow(dataSet)#
+	## extract other specified arguments (these are optional)#
+	dotsLength <- list(...) #
+	if(length(dotsLength) != 0){#
+		dotList <- unlist(dotsLength)#
+		splitDelim <- dotList[grepl("splitdelim", tolower(names(dotList)))]#
+		} else{#
+			dotList <- NULL#
+			}#
+	## otherwise set these inputs to null/pre-determined string#
+  	splitDelim <- if(is.null(dotList) | !any(grepl("splitdelim", tolower(names(dotList))))){NULL} else{splitDelim}#
+  	sapply(seq_len(nrow(dataSet)), function(elementNo){#
+      currentRowNum <- dataSet[elementNo,"rowID"]#
+      currentRow <- dataSet[[columnName]][elementNo]#
+      currentRow <- if(is.null(splitDelim)){currentRow} else{trimws(unlist(strsplit(currentRow, splitDelim))) }#
+#
+      otherRowNum <- dataSet[-elementNo,"rowID"]#
+      allOtherRows  <- dataSet[[columnName]][-elementNo]#
+#
+      findDuplicate <- sapply(currentRow, function(x) grepl(paste0("\\b",tolower(x),"\\b"), tolower(allOtherRows)),#
+                              simplify  = FALSE)#
+      findDuplicate  <- as.data.frame(findDuplicate)#
+      findDuplicate$rowNum <- otherRowNum#
+      duplicateRowNums <- findDuplicate[["rowNum"]][unique(unlist(sapply(findDuplicate, grep, pattern = TRUE)))]#
+#
+      ifelse(length(duplicateRowNums) > 0,#
+             paste(sort(as.numeric(c(currentRowNum, duplicateRowNums))), collapse = ","), "")#
+#
+    })#
+#
+}
+colorData <- data.frame(colors = c("PurPle,Green", "blue", "Green", "blue", "RED","purple"))
+colorData$duplicates <- checkDuplicates(dataSet = colorData, columnName = colors, splitDelim = ",")
+colorData
+checkDuplicates <- function(dataSet, columnName, ...){#
+	columnName <- as.character(substitute(columnName))#
+	dataSet <- as.data.frame(dataSet)#
+	dataSet$rowID <- 1:nrow(dataSet)#
+	## extract other specified arguments (these are optional)#
+	dotsLength <- list(...) #
+	if(length(dotsLength) != 0){#
+		dotList <- unlist(dotsLength)#
+		splitDelim <- dotList[grepl("splitdelim", tolower(names(dotList)))]#
+		} else{#
+			dotList <- NULL#
+			}#
+	## otherwise set these inputs to null/pre-determined string#
+  	splitDelim <- if(is.null(dotList) | !any(grepl("splitdelim", tolower(names(dotList))))){NULL} else{splitDelim}#
+  	sapply(seq_len(nrow(dataSet)), function(elementNo){#
+      currentRowNum <- dataSet[elementNo,"rowID"]#
+      currentRow <- dataSet[[columnName]][elementNo]#
+      currentRow <- if(is.null(splitDelim)){currentRow} else{trimws(unlist(strsplit(currentRow, splitDelim))) }#
+#
+      otherRowNum <- dataSet[-elementNo,"rowID"]#
+      allOtherRows  <- dataSet[[columnName]][-elementNo]#
+#
+      findDuplicate <- sapply(currentRow, function(x) grepl(paste0("\\b",tolower(x),"\\b"), tolower(allOtherRows)),#
+                              simplify  = FALSE)#
+      findDuplicate  <- as.data.frame(findDuplicate)#
+      findDuplicate$rowNum <- otherRowNum#
+      duplicateRowNums <- findDuplicate[["rowNum"]][unique(unlist(sapply(findDuplicate, grep, pattern = TRUE)))]#
+#
+      ifelse(length(duplicateRowNums) > 0,#
+             paste(sort(as.numeric(c(currentRowNum, duplicateRowNums))), collapse = ","), "")#
+#
+    })#
+#
+}
+letterData <- data.frame(letter = sample(letters[1:15], size = 10, replace = TRUE))
+letterData$duplicates <- checkDuplicates(dataSet = letterData, columnName = "letter")
+letterData
+reorderCols <- function(dataSet, colReorder, newOrder){#
+	colReorder <- as.character(substitute(colReorder))#
+	dataSet[order(match(dataSet[[colReorder]],newOrder)),]#
+}
+outOfOrder <- data.frame(values = c("zucchini", "banana", "apple", "carrot"),
+letter = c("z", "b", "a","c"))
+outOfOrder
+inOrder <- outOfOrder
+reorderCols(dataSet = outOfOrder, colReorder = "values",
+newOrder = c( "apple","banana","carrot","zucchini"))
+reorderCols(dataSet = outOfOrder, colReorder = "values",
+newOrder = c( "apple","carrot","banana","zucchini"))
+toSearch
+match_return <- function(searchVal, lookUpDataFrame, lookUpCol, returnCol){#
+  if(!any(is.data.frame(lookUpDataFrame), tibble::is_tibble(lookUpDataFrame))){#
+    stop("\nThis function is only works with tibble/data frame objects.")#
+  }#
+  # interate over searchVal#
+  sapply(searchVal, function(toSearch){#
+  	lookUpDataFrame[match(escape_punct(toSearch), lookUpDataFrame[[lookUpCol]]), returnCol]#
+  })#
+}
+race_key <- data.frame(value = 1:4, label = c("Black/African American", "Asian/Asian American",
+"Indigenous", "Native Hawaiian/Pacific Islander"))
+race_key
+#' race_tabl
+race_tabl <- data.frame(race_ethnicity = sample(1:4, size = 10, replace = TRUE))
+race_tabl
+match_return(race_tabl$race_ethnicity, lookUpDataFrame = race_key, lookUpCol = "value", returnCol = "label")
+#' Function to escape punctuation for regex search .#
+#'#
+#' @param x a character vector.#
+#' @examples#
+#' stringSearch <- "All punctuations must be escaped. Will this function escape them? Yes."#
+#' escape_punct(stringSearch)#
+#'#
+escape_punct <- function(x) {#
+	gsub("([][{}()+*^${|\\\\?.])", "\\\\\\1", x)#
+}
+match_return(race_tabl$race_ethnicity, lookUpDataFrame = race_key, lookUpCol = "value", returnCol = "label")
+race_tabl
+race_tabl$race_eth_label <- match_return(race_tabl$race_ethnicity, lookUpDataFrame = race_key,
+lookUpCol = "value", returnCol = "label")
+race_tabl
+race_key
+race_tabl <- data.frame(race_ethnicity = sample(1:5, size = 10, replace = TRUE))
+race_tabl$race_eth_label <- match_return(race_tabl$race_ethnicity, lookUpDataFrame = race_key,
+lookUpCol = "value", returnCol = "label")
+race_tabl
+recode_key_apply <- function(value, label, ...) {#
+  ## check for dots#
+  dots <- as.list(substitute(...()))#
+  if(length(dots) !=0){#
+    dotsList <- unlist(dots)#
+    incluMissing <- dotsList[grepl("^inclumissing$", tolower(names(dotsList)))]#
+    missingValue <- dotsList[grepl("^missingvalue$", tolower(names(dotsList)))]#
+  } else{#
+    dotsList <- NULL#
+  }#
+#
+  # set inputs to NULL/default if they do not exist#
+  incluMissing <- if(is.null(dotsList) | !any(grepl("^inclumissing$", tolower(names(dotsList))))){FALSE} else{incluMissing}#
+  missingValue <- if(is.null(dotsList) | !any(grepl("^missingvalue$", tolower(names(dotsList))))){-99} else{missingValue}#
+#
+  # check whether to add missing#
+  if(grepl("true|t|y|yes|1", tolower(incluMissing))){#
+    value <- c(value, as.double(missingValue))#
+    label <- c(label, "Missing")#
+  }#
+#
+  # print two sided formulas#
+  lapply(seq_along(value), FUN = function(x) {#
+  		bquote(.(value[x]) ~ .(label[x]))#
+  })#
+#
+}
+recode_apply_dat <- data.frame(rank = sample(1:10, size = 10, replace = FALSE))
+recode_apply_dat$rank_labelled <- dplyr::case_match(recode_apply_dat$rank,
+!!!recode_key_apply(value = 1:10, label = c("first", "second", "third", "fourth",
+"fifth", "sixth", "seventh", "eighth", "ninth","tenth")))
+recode_apply_dat
+recode_apply_dat$rank
+recode_key_apply
+recode_apply_dat2 <- data.frame(gender = sample(c(1:3,NA), size = 10, replace = TRUE))
+recode_apply_dat2$gender_labelled <- dplyr::case_match(recode_apply_dat2$gender,
+!!!recode_key_apply(value = c(1:3,NA), label = c("woman", "man", "non-binary", "system missing")))
+recode_apply_dat2
+recode_apply_dat3 <- data.frame(race = sample(c(1:4,NA,4444), size = 15, replace = TRUE))
+recode_apply_dat3$race_labelled <- dplyr::case_match(recode_apply_dat3$race,
+!!!recode_key_apply(value = c(1:4,NA), label = c("Black/African American", "Asian",
+"Hispanic/Latinx", "Indigenous", "Sytem Missing"), incluMissing = TRUE, missingValue = 4444))
+recode_apply_dat3
+getwd
+getwd()
+factor_labels <- function(x, key, ...){#
+  # extract from dots#
+  dotsLength <- list(...)#
+  if(length(dotsLength) != 0){#
+    dotList <- unlist(dotsLength)#
+    variableName_col <- dotList[grepl("^variablename_col$", tolower(names(dotList)))]#
+    valueLabels_col <- dotList[grepl("^valuelabels_col$", tolower(names(dotList)))]#
+  }else{#
+    dotList <- NULL#
+  }#
+# otherwise set these inputs to null/predetermined string#
+variableName_col <- if(is.null(dotList) | !any(grepl("^variablename_col$", tolower(names(dotList))))){"variableName"} else{variableName_col}#
+valueLabels_col <- if(is.null(dotList) | !any(grepl("^valuelabels_col$", tolower(names(dotList))))){"valueLabels"} else{valueLabels_col}#
+# extract variable name#
+ x_name <- rename_cols(x)#
+# subset key#
+key <- data.frame(key[grepl(paste0("^",x_name, "$"), key[[variableName_col]]),])#
+# return vector of values#
+vlulist(key[[valueLabels_col]])#
+}
+factor_labels_dat2 <- data.frame(var_names = c("edFund_fedLoan","belong_welcomed"),#
+value_labels = c("Unselected;Selected", "Strongly disagree;Somewhat disagree;Neither disagree nor agree;Somewhat agree;Strongly agree"))#
+factor_labels(x = "belong_welcomed", key = factor_labels_dat2, variableName_col = "var_names",#
+valueLabels_col = "value_labels")
+rename_cols <- function(x, ...){#
+  # extract from dots#
+  dotsLength <- list(...)#
+  if(length(dotsLength) != 0){#
+    dotList <- unlist(dotsLength)#
+    groupFlag <- dotList[grep("^groupflag$", tolower(names(dotList)))]#
+  } else{#
+    dotList <- NULL#
+  }#
+#
+  # otherwise set these inputs to null/pre-determined string#
+  groupFlag <- if(is.null(dotList) | !any(grepl("^groupflag$", tolower(names(dotList))))){"_w\\d$"} else{groupFlag}#
+#
+  # remove group/time flag#
+	gsub(x = x, pattern = groupFlag, replacement ="")#
+	}
+factor_labels_dat2 <- data.frame(var_names = c("edFund_fedLoan","belong_welcomed"),#
+value_labels = c("Unselected;Selected", "Strongly disagree;Somewhat disagree;Neither disagree nor agree;Somewhat agree;Strongly agree"))#
+factor_labels(x = "belong_welcomed", key = factor_labels_dat2, variableName_col = "var_names",#
+valueLabels_col = "value_labels")

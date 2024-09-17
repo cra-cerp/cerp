@@ -1,0 +1,122 @@
+---
+title: "Introduction to cerp"
+output: rmarkdown::html_vignette
+description: >
+  This document introduces you to cerp's most frequently used tools, and shows you how to apply them to data frames.
+vignette: >
+  %\VignetteIndexEntry{introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The CRA Center for Evaluating the Research Pipeline (CERP) collects large amounts of survey data. The cerp package makes it easy to clean, manipulate, and transform CERP data. All functions in the cerp package are documented, and most contain self-contained examples of how to apply each function. If you notice a bug or you have trouble using a function, please contact Dr. [Ama Nyame-Mensah](ama@cra.org), the maintainer of the cerp package.
+
+
+To begin, load cerp.
+
+```{r setup, message = FALSE}
+library(cerp)
+```
+
+### Identify unique rows with `checkDuplicates()`
+
+`checkDuplicates()` identifies duplicates (via a row id) in a data frame or tibble column. Unique rows will contain a single row id. Non-unique rows will contain two or more row ids. The function is compatible with both Tidyverse and Base R syntax as shown below.
+
+```{r}
+
+distinct_rows_data$duplicates <- checkDuplicates(dataSet = distinct_rows_data, columnName = "id")
+
+distinct_rows_data
+
+dplyr::mutate(distinct_rows_data, duplicates2 = checkDuplicates(dataSet = distinct_rows_data, columnName = "id"))
+
+```
+
+### Keep distinct rows with `distinct_rows()`
+
+`distinct_rows()` is a function that is similar to `distinct()` from Tidyverse's dplyr. Like `distinct(),` multiple columns can be used as key variables; you can keep all variables and retain either the first or last occurrence of each duplicate. To retain appropriate cases, pre-sort your data on all key variables before executing the function.
+
+```{r}
+
+distinct_rows_data2 <- distinct_rows_data[order(distinct_rows_data$id, 
+                                                distinct_rows_data$recordedDate),]
+
+distinct_rows(dataset = distinct_rows_data2, column = id, retain = first, keep_allVars = TRUE)
+
+distinct_rows(dataset = distinct_rows_data2, column = id, retain = last, keep_allVars = TRUE)
+
+```
+
+## Keep the most recent response for a record with `createGlobalVars()`
+
+When participants respond to survey questions, their answers are considered up-to-date and accurate as of the date they were surveyed. Participants who are followed up with at a later date have an opportunity to provide more recent information. 
+
+The `createGlobalVars()` is a generalized function for creating up-to-date global variables given available data. Non-NA and blank variables are prioritized. 
+
+When creating a global variable, identify the data set and insert a list of variable stems. NOTE: variable stems are the main (or root) variable name. For example, if information about participants' sex at birth were collected at wave 1 (i.e., sex_w1) and wave 2 (sex_w2), the variable stem for the variable `sex at birth` would be `sex`.
+
+```{r}
+
+sexBirth_data
+
+createGlobalVars(dataSet = sexBirth_data, listVarStems = "sex")
+
+```
+
+Although most CERP project data that are collected over multiple waves use the variable suffix `_w#`, where `w` corresponds to a wave and `#` corresponds to a wave number, using the parameter `groupFlag`, you can specify other variable wave suffixes that identify a group or time flag pattern. As an added bonus, multiple variable stems can be specified when generating global variables and columns used to create a global variable need not be in sequential order in your data set.
+
+```{r}
+
+yearBorn_data
+
+createGlobalVars(dataSet = yearBorn_data, listVarStems = "yearBorn", groupFlag = "_t")
+
+```
+
+### Mapping labels to values with `recode_key_apply()`
+
+There are many wrapper functions for recoding variable values and mapping those values to labels within the R ecosystem. Due to Qualtrics quirks and changes in how CERP variables are labeled and coded, this process can be tedious. `recode_key_apply()` is a simple wrapper that enables you to map labels onto values dynamically. The function was designed to work with `case_match()` from the dplyr package and produces a sequence of two-sided formulas from vectors.
+
+```{r}
+
+recode_key_apply(value = 1:10, 
+                 label = c("first", "second", "third", "fourth",
+                           "fifth", "sixth", "seventh", "eighth", 
+                           "ninth","tenth"))
+
+recode_apply_data
+
+dplyr::case_match(recode_apply_data$rank, !!!recode_key_apply(value = 1:10, 
+                  label = c("first", "second", "third", "fourth",
+                            "fifth", "sixth", "seventh", "eighth", 
+                            "ninth","tenth")))
+
+```
+
+
+### Extract matched string from a vector with `str_match_extract()`
+
+`str_match_extract()` is a function that is similar to `str_extract()` from the stringr package. Using ``str_match_extract()` you can search for and extract matched string from a vector.
+
+```{r}
+
+string_to_match <- c("Choose up to 2 responses.", "Select all that apply.")
+string_to_search <- data.frame(orig_varLabel = c("After you complete your current program,
+what are your plans after graduation? Choose up to 2 responses.",
+"How did you learn about the REU? Select all that apply.",
+"This should return NA"))
+
+string_to_search$extracted_string <- str_match_extract(object = string_to_search$orig_varLabel,
+objectDictionary = string_to_match)
+
+string_to_search
+
+```
+

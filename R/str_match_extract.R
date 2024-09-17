@@ -1,0 +1,89 @@
+#' A function for extracting matched string from a vector.
+#'
+#' @description
+#' This function is similar to str_extract from stringr. NOTE: case is ignored when matches are sought.
+#'
+#' @param object a vector to search for match string
+#' @param objectDictionary character vector to match in object
+#' @param \dots Additional parameters to pass to function. These include:
+#' \itemize{
+#'  \item \code{objectEscape}: An optional parameter that when set to TRUE escapes all punctuation in the object
+#'  to search. Default is FALSE.
+#'  \item \code{objectDictEscape}: An optional parameter that when set to TRUE escapes all punctuation in the
+#'  object dictionary to search. Default is FALSE.
+#'  \item \code{specialRun}: An optional argument that when set to TRUE will return all matched string
+#'  separated by a semi-colon (e.g., match1; match2; match3). The default is FALSE, as only one match
+#'  is typically expected.
+#'  }
+#'
+#' @author Ama Nyame-Mensah
+#'
+#' @examples
+#' # An example using text
+#' string_to_match <- c("Choose up to 2 responses.", "Select all that apply.")
+#' string_to_search <- data.frame(orig_varLabel = c("After you complete your current program,
+#' what are your plans after graduation? Choose up to 2 responses.",
+#' "How did you learn about the REU? Select all that apply.",
+#' "This should return NA"))
+#' string_to_search$extracted_string <- str_match_extract(object = string_to_search$orig_varLabel,
+#' objectDictionary = string_to_match)
+#'
+#' # An example returning multiple matched string
+#' this_match <- c("Choose up to 2 responses.", "Select all that apply.", "Select all that apply")
+#' string_to_search2 <- data.frame(orig_varLabel = c("After you complete your current program,
+#' what are your plans after graduation? Choose up to 2 responses. Select all that apply",
+#' "How did you learn about the REU? Select all that apply.", "This should return NA"))
+#' string_to_search2$extracted_string <- str_match_extract(object = string_to_search2$orig_varLabel,
+#' objectDictionary = this_match, specialRun = TRUE)
+#'
+#' @export
+str_match_extract <- function(object, objectDictionary, ...){
+
+### quick check on required parameters
+stopifnot("\nThe object you would like to check for string matches is not of type vector." = is.vector(object),
+          "\nThe objectDictionary you would like to use to extract matched string from is not of type vector."
+          = is.vector(objectDictionary))
+
+### proceed otherwise
+## extract other specified arguments (these are optional)
+dots_list <- list(...)
+if(length(dots_list) != 0){
+  dots <- unlist(dots_list)
+  objectEscape <- dots[grepl("objectescape", tolower(names(dots)))]
+  objectDictEscape <- dots[grepl("objectdictescape", tolower(names(dots)))]
+  specialRun <- dots[grepl("specialrun", tolower(names(dots)))]
+} else{
+  dots <- NULL
+}
+
+## set these inputs to null/pre-determined string
+objectEscape <- if(is.null(dots) | !any(grepl("objectescape", tolower(names(dots))))){FALSE} else{objectEscape}
+objectDictEscape <- if(is.null(dots) | !any(grepl("objectdictescape", tolower(names(dots))))){FALSE} else{objectDictEscape}
+specialRun <- if(is.null(dots) | !any(grepl("specialrun", tolower(names(dots))))){FALSE} else{specialRun}
+
+## clean object dictionary (questioning: only for survey question cases)
+objectDictionary <- gsub("\\$.*\\{.*\\}.*", "", objectDictionary)
+
+## escape punctuations
+if(objectEscape){object <- cerp::escape_punct(object)}
+if(objectDictEscape){objectDictionary <- cerp::escape_punct(objectDictionary)}
+
+### begin find/match and extract
+unlist(lapply(seq_along(object), function(i){
+  match_found <- unlist(regmatches(object[i],gregexpr(paste0(tolower(objectDictionary), collapse = "|"),
+                                                      ignore.case = TRUE, object[i])))
+
+  if(length(match_found) == 0){
+    NA
+  } else{
+    if(isTRUE(specialRun)){
+      toReturn <- regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"),
+                                                ignore.case = TRUE, object[i]))
+      paste0(unlist(toReturn), collapse = "; ")
+      } else{
+        regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"),
+                                      ignore.case = TRUE, object[i]))
+      }
+    }
+  }))
+}

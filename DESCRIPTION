@@ -1,0 +1,24 @@
+Package: cerp
+Type: Package
+Title: This package contains helpful functions that members of the CERP team use
+Version: 0.1.0
+Author: CERP Staff <cerp@cra.org>
+Maintainer: Ama Nyame-Mensah <ama@cra.org>
+Description: This package contains utility and data manipulation functions used by CERP Staff at the Computing Research Association.
+License: file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    dplyr,
+    haven,
+    mgsub,
+    rlang,
+    rvest,
+    stringr
+RoxygenNote: 7.3.1
+Depends: 
+    R (>= 2.10)
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
