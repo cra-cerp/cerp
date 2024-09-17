@@ -8,8 +8,10 @@ The CRA Center for Evaluating the Research Pipeline (CERP) collects large amount
 
 1. First, you need to install the `devtools` package (if you have never used it) using the `install.packages()` command.
 2. Load the devtools package. `library(devtools)`
-3. Use devtools' `install_github()` function to install the package: `install_github("cra-cerp/cerp")`
+3. Use devtools' `install_github()` function to install the package: `install_github(repo = "cra-cerp/cerp", build_vignettes = TRUE)`
 4. Load the package `library(cerp)`
+5. To view the package vignette, use `vignette(topic = "Introduction to cerp", 
+package = "cerp")` 
 
 ## Getting Help
 
