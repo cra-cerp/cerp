@@ -14,4 +14,4 @@ The CRA Center for Evaluating the Research Pipeline (CERP) collects large amount
 
 ## Getting Help
 
-If you notice a bug or you have trouble using a function, please contact Dr. Ama Nyame-Mensah [ama@cra.org](mailto:ama@cra.org), the maintainer of the cerp package.
+If you notice a bug or you have trouble using a function, please contact [Dr. Ama Nyame-Mensah](mailto:ama@cra.org), the maintainer of the cerp package.
