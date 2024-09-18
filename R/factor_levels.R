@@ -34,7 +34,7 @@
 #' variableValues_col = "var_values")
 #'
 #' @export
-factor_levels = function(x, key, ...){
+factor_levels <- function(x, key, ...){
 
 ### quick check key
 stopifnot("\nThe key you supplied is not a tibble or data frame." = (sum(grepl("tbl_df|tbl|data.frame", class(key))) > 0))

@@ -3,8 +3,6 @@
 #' @description This function can be used to extract question/variable labels from
 #' an SPSS data set.
 #'
-#' @importFrom tibble is_tibble
-#'
 #' @param dataSet a tibble or data frame.
 #' @param variableName character with name of variable in dataSet.
 #'

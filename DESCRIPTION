@@ -2,7 +2,7 @@ Package: cerp
 Type: Package
 Title: This package contains helpful functions that members of the CERP team use
 Version: 0.1.0
-Author: CERP Staff <cerp@cra.org>
+Author: Ama Nyame-Mensah
 Maintainer: Ama Nyame-Mensah <ama@cra.org>
 Description: This package contains utility and data manipulation functions used by CERP Staff at the Computing Research Association.
 License: file LICENSE
