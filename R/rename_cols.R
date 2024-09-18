@@ -1,7 +1,5 @@
 #' Function to strip group/time flags
 #'
-#' @importFrom cerp escape_punct
-#'
 #' @description
 #' This is a generalized function for stripping group/time flags from variable names.
 #'

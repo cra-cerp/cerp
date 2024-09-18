@@ -19,3 +19,4 @@ BuildType: Package
 PackageUseDevtools: Yes
 PackagePath: /Users/amanm/Desktop/package/cerp
 PackageInstallArgs: --no-multiarch --with-keep.source
+PackageRoxygenize: rd,collate,namespace,vignette

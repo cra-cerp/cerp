@@ -1,7 +1,5 @@
 #' Function to create indicator wave column
 #'
-#' @importFrom cerp escape_punct
-#'
 #' @description
 #' This is a generalized function for extracting time or group flags for variables.
 #'

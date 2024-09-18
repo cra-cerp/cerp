@@ -4,7 +4,6 @@
 #' response for a record.
 #'
 #' @importFrom mgsub mgsub
-#' @importFrom cerp escape_punct
 #'
 #' @param dataSet A tibble or data frame object.
 #' @param listVarStems A character vector of unique variable (name) stems.

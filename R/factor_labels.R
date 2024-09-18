@@ -3,9 +3,6 @@
 #' @description This function can be used to create factor labels for variables
 #' in a data frame or tibble.
 #'
-#' @importFrom cerp rename_cols
-#' @importFrom cerp vlulist
-#'
 #' @param x a variable name WITHOUT group/time flag.
 #' @param key a tibble or data frame containing two columns 1) variable names (without group/time flag),
 #' and 2) variable values. NOTE: Variable values should be concatenated together using a semi-colon

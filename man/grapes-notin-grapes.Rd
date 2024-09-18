@@ -2,7 +2,7 @@
 % Please edit documentation in R/not_in_operator.R
 \name{\%notin\%}
 \alias{\%notin\%}
-\title{This script creates the not in operator}
+\title{The negation of %in%}
 \usage{
 x \%notin\% table
 }
@@ -13,4 +13,10 @@ x \%notin\% table
 }
 \description{
 This operator is the negated version of the %in% operator.
+}
+\examples{
+
+a <- c(1,2,3)
+30 \%notin\% a
+
 }

@@ -4,7 +4,6 @@
 #' an SPSS data set.
 #'
 #' @importFrom tibble is_tibble
-#' @importFrom cerp escape_punct
 #'
 #' @param dataSet a tibble or data frame.
 #' @param variableName character with name of variable in dataSet.
