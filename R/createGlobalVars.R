@@ -84,7 +84,7 @@ checkUpdate <- function(dataSet, stemName){
     subDat <- dataSet[columnNames]
     newVar <- lapply(seq_len(nrow(subDat)), newVarValues, dataSetSub = subDat, stemName = x)
     newVar <- lapply(newVar, FUN = function(x) ifelse(length(x) == 0, NA, x))
-    newVar
+    unlist(newVar)
     })
 }
 
