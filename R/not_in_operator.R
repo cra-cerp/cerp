@@ -11,7 +11,7 @@
 #' compare_vec <- sample(1:10, size = 2, replace = FALSE)
 #'
 #' @export
-"%notin%" <- function(x, y){
+`%notin%` <- function(x, y){
 
 ### quick check on required parameters
 stopifnot("\nThe x variable you supplied is not of type vector." = is.vector(x),
