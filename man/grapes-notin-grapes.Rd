@@ -2,7 +2,7 @@
 % Please edit documentation in R/not_in_operator.R
 \name{\%notin\%}
 \alias{\%notin\%}
-\title{The negation of %in%}
+\title{Negation of in}
 \usage{
 x \%notin\% table
 }

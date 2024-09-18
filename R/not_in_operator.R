@@ -1,4 +1,4 @@
-#' The negation of %in%
+#' Negation of in
 #'
 #' @description
 #' This operator is the negated version of the %in% operator.
