@@ -4,18 +4,13 @@
 \alias{\%notin\%}
 \title{This script creates the not in operator}
 \usage{
-x \%notin\% y
+x \%notin\% table
 }
 \arguments{
-\item{x}{vector of values.}
+\item{x}{input vector to compare}
 
-\item{y}{vector of values.}
+\item{table}{values to compare against}
 }
 \description{
 This operator is the negated version of the %in% operator.
-}
-\examples{
-values_vec <- 1:4
-compare_vec <- sample(1:10, size = 2, replace = FALSE)
-
 }

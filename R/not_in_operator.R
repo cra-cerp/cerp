@@ -3,21 +3,15 @@
 #' @description
 #' This operator is the negated version of the %in% operator.
 #'
-#' @param x vector of values.
-#' @param y vector of values.
-#'
-#' @examples
-#' values_vec <- 1:4
-#' compare_vec <- sample(1:10, size = 2, replace = FALSE)
+#' @param x input vector to compare
+#' @param table values to compare against
 #'
 #' @export
-`%notin%` <- function(x, y){
+`%notin%` <- function(x, table){
 
-### quick check on required parameters
-stopifnot("\nThe x variable you supplied is not of type vector." = is.vector(x),
-          "\nThe x variable you supplied is not of type vector." = is.vector(y))
-
-### search and return
-match(x, y, nomatch = 0) == 0
+match(x, table, nomatch = 0L) == 0L
 
 }
+
+
+
