@@ -14,6 +14,8 @@
 #'  \item \code{specialRun}: An optional argument that when set to TRUE will return all matched string
 #'  separated by a semi-colon (e.g., match1; match2; match3). The default is FALSE, as only one match
 #'  is typically expected.
+#'  \item \code{invert}: An optional argument that when set to TRUE will return values for elements that
+#'  do not match
 #'  }
 #'
 #' @author Ama Nyame-Mensah
@@ -52,6 +54,7 @@ if(length(dots_list) != 0){
   objectEscape <- dots[grepl("objectescape", tolower(names(dots)))]
   objectDictEscape <- dots[grepl("objectdictescape", tolower(names(dots)))]
   specialRun <- dots[grepl("specialrun", tolower(names(dots)))]
+  invert <- dots[grepl("invert", tolower(names(dots)))]
 } else{
   dots <- NULL
 }
@@ -60,6 +63,7 @@ if(length(dots_list) != 0){
 objectEscape <- if(is.null(dots) | !any(grepl("objectescape", tolower(names(dots))))){FALSE} else{objectEscape}
 objectDictEscape <- if(is.null(dots) | !any(grepl("objectdictescape", tolower(names(dots))))){FALSE} else{objectDictEscape}
 specialRun <- if(is.null(dots) | !any(grepl("specialrun", tolower(names(dots))))){FALSE} else{specialRun}
+invert <- if(is.null(dots) | !any(grepl("invert", tolower(names(dots))))){FALSE} else{invert}
 
 ## clean object dictionary (questioning: only for survey question cases)
 objectDictionary <- gsub("\\$.*\\{.*\\}.*", "", objectDictionary)
@@ -70,19 +74,23 @@ if(objectDictEscape){objectDictionary <- cerp::escape_punct(objectDictionary)}
 
 ### begin find/match and extract
 unlist(lapply(seq_along(object), function(i){
-  match_found <- unlist(regmatches(object[i],gregexpr(paste0(tolower(objectDictionary), collapse = "|"),
-                                                      ignore.case = TRUE, object[i])))
+  match_found <-
+    unlist(regmatches(object[i],
+                      gregexpr(paste0(tolower(objectDictionary), collapse = "|"),
+                               ignore.case = TRUE, object[i]), invert = invert))
 
   if(length(match_found) == 0){
     NA
   } else{
     if(isTRUE(specialRun)){
       toReturn <- regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"),
-                                                ignore.case = TRUE, object[i]))
+                                                ignore.case = TRUE, object[i]),
+                             invert = invert)
       paste0(unlist(toReturn), collapse = "; ")
       } else{
         regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"),
-                                      ignore.case = TRUE, object[i]))
+                                      ignore.case = TRUE, object[i]),
+                   invert = invert)
       }
     }
   }))
