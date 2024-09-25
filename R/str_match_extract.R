@@ -81,17 +81,18 @@ unlist(lapply(seq_along(object), function(i){
 
   if(length(match_found) == 0){
     NA
-  } else{
-    if(isTRUE(specialRun)){
+  } else if(all(length(match_found) > 0, specialRun)){
       toReturn <- regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"),
                                                 ignore.case = TRUE, object[i]),
                              invert = invert)
-      paste0(unlist(toReturn), collapse = "; ")
+      toReturn <- unlist(toReturn)[unlist(toReturn) != ""]
+      paste0(toReturn, collapse = "; ")
+
       } else{
-        regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"),
-                                      ignore.case = TRUE, object[i]),
-                   invert = invert)
+        toReturn <- regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"),
+                                                  ignore.case = TRUE, object[i]),
+                               invert = invert)
+        unlist(toReturn)[unlist(toReturn) != ""]
       }
-    }
   }))
 }
