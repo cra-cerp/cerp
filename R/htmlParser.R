@@ -21,7 +21,8 @@ stopifnot("\nThe object you would like to remove html tags/entities from is not 
 ### otherwise, proceed
 ## replace characters
 x <- mgsub::mgsub(x, pattern = c("<[^>]+>","  ","&rdquo;","&ldquo;","&amp;",
-                                 "&rsquo;","&lsquo;","&#39;","\\u201a\\u00c4\\u00f4",
+                                 "&rsquo;","&lsquo;","&#39;",
+                                 "[\u201a\u00c4\u00f4\u2018\u2019\u055A\u201B\uFF07]",
                                  "&quot;","[^ -~]+"),
                   replacement = c("" , " ","'","'","'","'","'","'","'","'"," "))
 
