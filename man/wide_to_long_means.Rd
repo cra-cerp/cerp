@@ -4,12 +4,12 @@
 \alias{wide_to_long_means}
 \title{Calculate means for longitudinal variables with the same variable stem.}
 \usage{
-wide_to_long_means(x, dataSet, waves, ...)
+wide_to_long_means(dataSet, x, waves, ...)
 }
 \arguments{
-\item{x}{a character vector of variable stems.}
-
 \item{dataSet}{a tibble or data frame.}
+
+\item{x}{a character vector of variable stems.}
 
 \item{waves}{the number of waves/measurement occasions. Note: Wave numbers must be whole numbers and
 correspond to the wave/group flag that appears in the data set (e.g., variable_w1 corresponds to wave
@@ -49,8 +49,8 @@ belong_outsider_time3 = sample(c(NA,1:5), replace = TRUE, size = 10),
 belong_welcomed_time1 = sample(c(NA,1:5), replace = TRUE, size = 10),
 belong_welcomed_time3 = sample(c(NA,1:5), replace = TRUE, size = 10))
 wide_to_long_means(x = c("belong_welcomed","belong_outsider"), dataSet = wide_n_tabl2,
-waves = c(1L,3L), groupFlag = "_time",listWise = FALSE,wave_col_name1 = "Wave1",
-wave_col_name2 = "Wave3")
+waves = c(1L,3L), groupFlag = "_time",listWise = FALSE,wave_col_names = c("Wave1",
+"Wave3"))
 
 }
 \author{

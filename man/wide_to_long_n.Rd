@@ -47,8 +47,8 @@ belong_outsider_time3 = sample(c(NA,1:5), replace = TRUE, size = 10),
 belong_welcomed_time1 = sample(c(NA,1:5), replace = TRUE, size = 10),
 belong_welcomed_time3 = sample(c(NA,1:5), replace = TRUE, size = 10))
 wide_to_long_n(x = c("belong_welcomed","belong_outsider"), dataSet = wide_n_tabl2,
-waves = c(1,3), groupFlag = "_time",listWise = FALSE,wave_col_name1 = "Wave1",
-wave_col_name2 = "Wave3")
+waves = c(1,3), groupFlag = "_time",listWise = FALSE,wave_col_names = c("preSurvey",
+"oneYearLater"))
 
 }
 \author{

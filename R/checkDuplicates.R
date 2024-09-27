@@ -36,42 +36,35 @@
 checkDuplicates <- function(dataSet, columnName, ...){
 
 ### quick check on required parameters
-stopifnot("\nThe data set you supplied is not a tibble or data frame." = (sum(grepl("tbl_df|tbl|data.frame", class(dataSet))) > 0),
-          "\nThe column name you specified is not in the supplied data set." = (sum(grepl(paste0("^",columnName,"$"), names(dataSet))) > 0))
+stopifnot("\nThe data set you supplied is not a tibble or data frame." = class(dataSet) %in% c("tbl_df","tbl","data.frame"),
+          "\nThe column name you specified is not in the supplied data set." = columnName %in% names(dataSet))
 
 ### proceed otherwise
 ## set row id numbers
-dataSet$rowID <- 1:nrow(dataSet)
+dataSet$rowID <- seq_len(nrow(dataSet))
 
 ## extract other specified arguments (these are optional)
-dots_list <- list(...)
-if(length(dots_list) != 0){
-  dots <- unlist(dots_list)
-	splitDelim <- dots[grepl("splitdelim", tolower(names(dots)))]
-} else{
-  dots <- NULL
-}
-
-## otherwise set these inputs to null/pre-determined string
-splitDelim <- if(is.null(dots) | !any(grepl("splitdelim", tolower(names(dots))))){NULL} else{splitDelim}
+dots <- list(...)
+# set splitDelim
+splitDelim <- if (!is.null(dots[["splitDelim"]])) dots[["splitDelim"]] else NULL
 
 ## iterate over rows in data set and find duplicates
-sapply(seq_len(nrow(dataSet)), function(elementNo){
+unlist(lapply(seq_len(nrow(dataSet)), \(elementNo){
 
 	currentRowNum <- dataSet[elementNo,"rowID"]
 	currentRow <- dataSet[[columnName]][elementNo]
-	currentRow <- if(is.null(splitDelim)){currentRow} else{trimws(unlist(strsplit(currentRow, splitDelim))) }
+	if (!is.null(splitDelim)) {currentRow <- trimws(unlist(strsplit(currentRow, splitDelim)))}
 	otherRowNum <- dataSet[-elementNo,"rowID"]
 	allOtherRows  <- dataSet[[columnName]][-elementNo]
 
-	findDuplicate <- sapply(currentRow, function(x) grepl(paste0("\\b",tolower(x),"\\b"), tolower(allOtherRows)),
-	simplify  = FALSE)
+	findDuplicate <- lapply(currentRow, \(x) grepl(paste0("\\b",tolower(x),"\\b"), tolower(allOtherRows)))
 
 	findDuplicate  <- as.data.frame(findDuplicate)
 	findDuplicate$rowNum <- otherRowNum
-	duplicateRowNums <- findDuplicate[["rowNum"]][unique(unlist(sapply(findDuplicate, grep, pattern = TRUE)))]
+	duplicateRowNums <- findDuplicate[["rowNum"]][unique(unlist(lapply(findDuplicate, grep, pattern = TRUE)))]
 
 	paste0(sort(as.numeric(c(currentRowNum, duplicateRowNums))), collapse = ",")
 
-  })
+}))
+
 }

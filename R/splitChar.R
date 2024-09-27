@@ -33,31 +33,24 @@ splitChar <- function(vector, split, elementToKeep, ...){
 ### quick check for vector
 stopifnot("\nThe vector you supplied is not of type vector." = is.vector(vector),
           "\nAt least one of the values supplied to elementToKeep is not a whole number" =
-            all(sapply(elementToKeep, function(x){x %% 1 == 0})))
+            all(vapply(elementToKeep, \(x) x %% 1 == 0,logical(1))))
 
 ### otherwise, proceed
 ## extract other specified arguments (these are optional)
-dots_list <- list(...)
-if(length(dots_list) != 0){
-	dots <- unlist(dots_list)
-	addDelim <- dots[grepl("adddelim", tolower(names(dots)))]
-} else{
-  dots <- NULL
-}
-
-## set these inputs to null/pre-determined string
-addDelim <- if(is.null(dots) | !any(grepl("adddelim", tolower(names(dots))))){""} else{addDelim}
+dots <- list(...)
+# set addDelim
+addDelim <- if (!is.null(dots[["addDelim"]])) dots[["addDelim"]] else ""
 
 ### main manipulation
 ## iterate over vector
-sapply(vector, function(currentVec){
-	# unlist and split + keep select elements
-	splitStr <- unlist(strsplit(currentVec, split))[elementToKeep]
-	splitStr <- trimws(splitStr)
-	splitStr <- splitStr[!is.na(splitStr)]
-	# to return
-	paste0(splitStr, collapse = addDelim)
-	}, USE.NAMES = FALSE)
+unlist(lapply(vector, function(currentVec){
+  # unlist and split + keep select elements
+  splitStr <- unlist(strsplit(currentVec, split))[elementToKeep]
+  splitStr <- trimws(splitStr)
+  splitStr <- splitStr[!is.na(splitStr)]
+  # to return
+  paste0(splitStr, collapse = addDelim)
+})
+)
 }
-
 

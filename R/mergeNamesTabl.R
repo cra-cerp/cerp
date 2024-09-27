@@ -44,37 +44,36 @@
 #'
 #' @export
 mergeNamesTabl <- function(fullTabl, auxTabl, vars_to_add, ...){
-  # extract from dots
-  dots_list <- list(...)
-  if(length(dots_list) != 0){
-    dots <- unlist(dots_list)
-    fullTabl_variableCol <- dots[grep("^fulltabl_variablecol$", tolower(names(dots)))]
-    auxTabl_variableCol <- dots[grep("^auxtabl_variablecol$", tolower(names(dots)))]
-    set_commonkey <- dots[grep("^set_commonkey$", tolower(names(dots)))]
-    common_key <- dots[grep("^common_key$", tolower(names(dots)))]
-  } else{
-    dots <- NULL
-  }
 
-  # otherwise set these inputs to null/pre-determined string
-  fullTabl_variableCol <- if(is.null(dots) | !any(grepl("^fulltabl_variablecol$", tolower(names(dots))))){"Variable"} else{fullTabl_variableCol}
-  auxTabl_variableCol <- if(is.null(dots) | !any(grepl("^auxtabl_variablecol$", tolower(names(dots))))){"Variable"} else{auxTabl_variableCol}
-  set_commonkey <- if(is.null(dots) | !any(grepl("^set_commonkey$", tolower(names(dots))))){FALSE} else{set_commonkey}
-  common_key <- if(is.null(dots) | !any(grepl("^common_key$", tolower(names(dots))))){"Variable"} else{common_key}
+### quick check key
+stopifnot("\nAt least one of the tables supplied is not a tibble or data frame."
+          = all(vapply(list(fullTabl,auxTabl), \(x) class(x) %in% c("tbl_df","tbl","data.frame"), logical(1))))
 
-  # rename common key if set
-  if(set_commonkey){
-    names(fullTabl)[grep(fullTabl_variableCol, names(fullTabl))] <- common_key
-    names(auxTabl)[grep(auxTabl_variableCol, names(auxTabl))] <- common_key
-    fullTabl_variableCol <- common_key
-    auxTabl_variableCol <- common_key
-  }
+### otherwise, proceed
+## extract other specified arguments (these are optional)
+dots <- list(...)
+# set fullTabl_variableCol
+fullTabl_variableCol <- if (!is.null(dots[["fullTabl_variableCol"]])) dots[["fullTabl_variableCol"]] else "Variable"
+# set auxTabl_variableCol
+auxTabl_variableCol <- if (!is.null(dots[["auxTabl_variableCol"]])) dots[["auxTabl_variableCol"]] else "Variable"
+# set set_commonkey
+set_commonkey <- if (!is.null(dots[["set_commonkey"]])) as.logical(dots[["set_commonkey"]]) else FALSE
+# set common_key
+common_key <- if (!is.null(dots[["common_key"]])) dots[["common_key"]] else "Variable"
 
-  # find unique variables
-  unique_vars <- vars_to_add
+# rename common key if set
+if(set_commonkey){
+  names(fullTabl)[grep(fullTabl_variableCol, names(fullTabl))] <- common_key
+  names(auxTabl)[grep(auxTabl_variableCol, names(auxTabl))] <- common_key
+  fullTabl_variableCol <- common_key
+  auxTabl_variableCol <- common_key
+}
 
-  # iterate over unique variables fed
-  full_tabl_final <-
+# find unique variables
+unique_vars <- vars_to_add
+
+# iterate over unique variables fed
+full_tabl_final <-
   lapply(unique_vars, function(x){
     if(all(any(grepl(x, fullTabl)),any(grepl(x, auxTabl)))){
         # subset by variable
@@ -88,6 +87,6 @@ mergeNamesTabl <- function(fullTabl, auxTabl, vars_to_add, ...){
     }
   })
 
-  # merge into one table
-  do.call(dplyr::bind_rows, full_tabl_final)
+# merge into one table
+do.call(dplyr::bind_rows, full_tabl_final)
 }

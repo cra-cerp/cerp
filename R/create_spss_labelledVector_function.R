@@ -64,8 +64,8 @@
 create_spss_labelledVector_function <- function(dataSet, variableName,...){
 
 ### quick check on required parameters
-stopifnot("\nThe data set you supplied is not a tibble or data frame." = (sum(grepl("tbl_df|tbl|data.frame", class(dataSet))) > 0),
-          "\nThe column name you specified is not in the supplied data set." = (sum(grepl(paste0("^",variableName,"$"), names(dataSet))) > 0))
+stopifnot("\nThe data set you supplied is not a tibble or data frame." = class(dataSet) %in% c("tbl_df","tbl","data.frame"),
+          "\nThe column name you specified is not in the supplied data set." = variableName %in% names(dataSet))
 
 ### proceed otherwise
 ## extract other specified arguments
@@ -120,9 +120,9 @@ if(any(grepl("codebook", tolower(names(dots))))){
 	if(nrow(codeBook) == 0) stop(paste0("Variable: ", variableName, " does not exist in the codebook you supplied."))
 
 	# pull values
-	values <- cerp::vulist(codeBook[[codeBook_valuesCol]])
+	values <- vulist(codeBook[[codeBook_valuesCol]])
 	# pull value labels
-	valuesNames <- cerp::vlulist(codeBook[[codeBook_valueLabelsCol]])
+	valuesNames <- vlulist(codeBook[[codeBook_valueLabelsCol]])
 	# pull question label
 	questionLabel <-  codeBook[[codeBook_questionLabelCol]]
 

@@ -22,24 +22,17 @@ merge_dataframes_lists <- function(dfLists, ...){
 
 ### quick check for list of data frames/tibbles
 stopifnot("\nThe list of data frames/tibbles you supplied has at least one object that is not a tibble or data frame."
-          = (all(sapply(dfLists, function(x) sum(grepl("tbl_df|tbl|data.frame", class(x))) > 0))))
+          = all(vapply(dfLists, \(x) class(x) %in% c("tbl_df","tbl","data.frame"), logical(1))))
 
-## extract other specified arguments
-dots_list <- list(...)
-if(length(dots_list) != 0){
-  dots <- unlist(dots_list)
-  keyColumn <- dots[grep("key|id", names(dots))]
-} else{
-  dots <- NULL
-}
-
-### otherwise, proceed
-## set these inputs to null/pre-determined string
-keyColumn <- if(is.null(dots) | !any(grepl("^key|^id", tolower(names(dots))))){"CERPID"} else{keyColumn}
+### proceed otherwise
+## extract other specified arguments (these are optional)
+dots <- list(...)
+# set keyColumn
+keyColumn <- if (!is.null(dots[["keyColumn"]])) dots[["keyColumn"]] else "CERPID"
 
 ## quick check for key column in all objects
 stopifnot("\nAt least one object does not contain the key column."
-          = (all(sapply(dfLists, function(x) sum(grepl(keyColumn, names(x))) > 0))))
+          = all(vapply(dfLists, \(x) keyColumn %in% names(x), logical(1))))
 
 ## reduce into one data frame
 Reduce(function(x,y) merge(x = x, y = y, by = keyColumn, all  = TRUE, sort = FALSE), dfLists)

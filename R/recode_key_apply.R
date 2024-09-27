@@ -49,19 +49,12 @@ stopifnot("\nThe value parameter you supplied is not of type vector." = is.vecto
           "\nThe label parameter you supplied is not of type vector." = is.vector(label))
 
 ### otherwise, proceed
-## check for dots
-dots_list <- list(...)
-if(length(dots_list) !=0){
-	dots <- unlist(dots_list)
-    incluMissing <- dots[grepl("^inclumissing$", tolower(names(dots)))]
-    missingValue <- dots[grepl("^missingvalue$", tolower(names(dots)))]
-} else{
-	dots <- NULL
-}
-
-## set inputs to NULL/default if they do not exist
-incluMissing <- if(is.null(dots) | !any(grepl("^inclumissing$", tolower(names(dots))))){FALSE} else{as.logical(incluMissing)}
-missingValue <- if(is.null(dots) | !any(grepl("^missingvalue$", tolower(names(dots))))){NA} else{missingValue}
+## extract other specified arguments (these are optional)
+dots <- list(...)
+# set incluMissing
+incluMissing <- if (!is.null(dots[["incluMissing"]])) dots[["incluMissing"]] else FALSE
+# set missingValue
+missingValue <- if (!is.null(dots[["missingValue"]])) dots[["missingValue"]] else NA
 
 ## check whether to add label to missing values
 if(grepl("true|t|y|yes|1", tolower(incluMissing))){

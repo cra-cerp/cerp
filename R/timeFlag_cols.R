@@ -35,33 +35,27 @@ timeFlag_cols <- function(x, ...){
 stopifnot("\nThe x variable you supplied is not of type vector." = is.vector(x))
 
 ### otherwise, proceed
-## extract from dots
-dots_list <- list(...)
-if(length(dots_list) != 0){
-  dots <- unlist(dots_list)
-  groupFlag <- dots[grep("^groupflag$", tolower(names(dots)))]
-} else{
-  dots <- NULL
-}
-
-## set these inputs to null/pre-determined string
-groupFlag <- if(is.null(dots) | !any(grepl("^groupflag$", tolower(names(dots))))){"_w\\d$"} else{groupFlag}
-## check that groupFlag ends in a digit
-groupFlag <- ifelse(grepl(cerp::escape_punct("\\d$"), groupFlag), groupFlag, paste0(groupFlag, "\\d$"))
-## check that groupFlag as underscore
+## extract other specified arguments (these are optional)
+dots <- list(...)
+# set groupFlag
+groupFlag <- if (!is.null(dots[["groupFlag"]])) dots[["groupFlag"]] else "_w\\d$"
+# check that groupFlag ends in a digit
+groupFlag <- ifelse(grepl(escape_punct("\\d$"), groupFlag), groupFlag, paste0(groupFlag, "\\d$"))
+# check that groupFlag as underscore
 groupFlag <- ifelse(grepl(pattern = "^_", x = groupFlag), groupFlag, paste0("_",groupFlag))
 
 ### iterate over x to find group/time flags
-sapply(x, function(find_groupFlag){
-	# check for time/group flag
-	if(grepl(x = find_groupFlag, pattern = groupFlag)){
-		# if found replace with just the time/groupFlag
-		toReplace <- unlist(strsplit(x = find_groupFlag, split = groupFlag))
-		gsub(pattern = paste0(toReplace,"_"), replacement = "", x = find_groupFlag)
-	} else{
-		# other return globalVar
-		"globalVar"
-		}
+unlist(lapply(x, function(find_groupFlag){
+  # check for time/group flag
+  if(grepl(x = find_groupFlag, pattern = groupFlag)){
+    # if found replace with just the time/groupFlag
+    toReplace <- unlist(strsplit(x = find_groupFlag, split = groupFlag))
+    gsub(pattern = paste0(toReplace,"_"), replacement = "", x = find_groupFlag)
+  } else{
+    # other return globalVar
+    "globalVar"
+  }
 })
+)
 
 }

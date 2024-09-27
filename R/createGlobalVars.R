@@ -32,30 +32,24 @@
 createGlobalVars <- function(dataSet, listVarStems,...){
 
 ### quick check on required parameters
-stopifnot("\nThe data set you supplied is not a tibble or data frame." = (sum(grepl("tbl_df|tbl|data.frame", class(dataSet))) > 0),
+stopifnot("\nThe data set you supplied is not a tibble or data frame." = class(dataSet) %in% c("tbl_df","tbl","data.frame"),
           "\nThe variable stems you supplied are not in a vector." = is.vector(listVarStems))
 
-
-## extract from dots
-dots_list <- list(...)
-if(length(dots_list) != 0){
-  dots <- unlist(dots_list)
-  groupFlag <- dots[grep("^groupflag$", tolower(names(dots)))]
-} else{
-  dots <- NULL
-}
-
-## otherwise set these inputs to null/pre-determined string
-groupFlag <- if(is.null(dots) | !any(grepl("^groupflag$", tolower(names(dots))))){"_w\\d$"} else{groupFlag}
-## check that groupFlag ends in a digit
-groupFlag <- ifelse(grepl(cerp::escape_punct("\\d$"), groupFlag), groupFlag, paste0(groupFlag, "\\d$"))
-## check that groupFlag as underscore
+### proceed otherwise
+## extract other specified arguments (these are optional)
+dots <- list(...)
+# set groupFlag
+groupFlag <- if (!is.null(dots[["groupFlag"]])) dots[["groupFlag"]] else "_w\\d$"
+# check that groupFlag ends in a digit
+groupFlag <- ifelse(grepl(escape_punct("\\d$"), groupFlag), groupFlag, paste0(groupFlag, "\\d$"))
+# check that groupFlag as underscore
 groupFlag <- ifelse(grepl(pattern = "^_", x = groupFlag), groupFlag, paste0("_",groupFlag))
-## create groupFlag shortened
-groupFlagShortened <- if(is.null(dots) | !any(grepl("^groupflag$", tolower(names(dots))))){"_w"} else{gsub("\\d$","", groupFlag, fixed = TRUE)}
+# create groupFlag shortened
+groupFlagShortened <- ifelse(grepl("^_w",groupFlag), "_w", gsub("\\d$","", groupFlag, fixed = TRUE))
+
 
 ## general function for finding most up to date value to be pushed
-# NOTE: if NA/blank across the board, then NA/blank is returned
+# NOTE: if NA/blank across the board, then NA is returned
 newVarValues <- function(dataSetSub, rowNum, stemName){
   currentRow <- dataSetSub[rowNum,]
   currentRowUpdate <- unlist(Filter(function(x) !any(is.na(x)), currentRow))
@@ -79,17 +73,18 @@ newVarValues <- function(dataSetSub, rowNum, stemName){
 ## general function for creating pushed/global vector of values
 checkUpdate <- function(dataSet, stemName){
   # iterate over list of stem variable names
-  sapply(stemName, function(x){
+  lapply(stemName, \(x){
     columnNames <- names(dataSet)[grepl(paste0("^",x, groupFlag), names(dataSet))]
     subDat <- dataSet[columnNames]
     newVar <- lapply(seq_len(nrow(subDat)), newVarValues, dataSetSub = subDat, stemName = x)
-    newVar <- lapply(newVar, FUN = function(x) ifelse(length(x) == 0, NA, x))
+    newVar <- lapply(newVar, function(x) ifelse(length(x) == 0, NA, x))
     unlist(newVar)
     })
 }
 
 ## main manipulation
 new_GlobalVars <- data.frame(checkUpdate(dataSet, unlist(listVarStems)))
+names(new_GlobalVars) <- unlist(listVarStems)
 
 ## check + stop if any names already exist
 if(any(names(new_GlobalVars) %in% names(dataSet))){

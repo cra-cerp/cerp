@@ -43,62 +43,50 @@
 #' belong_welcomed_time1 = sample(c(NA,1:5), replace = TRUE, size = 10),
 #' belong_welcomed_time3 = sample(c(NA,1:5), replace = TRUE, size = 10))
 #' wide_to_long_means(x = c("belong_welcomed","belong_outsider"), dataSet = wide_n_tabl2,
-#' waves = c(1L,3L), groupFlag = "_time",listWise = FALSE,wave_col_name1 = "Wave1",
-#' wave_col_name2 = "Wave3")
+#' waves = c(1L,3L), groupFlag = "_time",listWise = FALSE,wave_col_names = c("Wave1",
+#'"Wave3"))
 #'
 #' @export
-wide_to_long_means <- function(x, dataSet, waves, ...){
+wide_to_long_means <- function(dataSet, x, waves, ...){
 
 ### quick check on required parameters
-stopifnot("\nThe data set you supplied is not a tibble or data frame." = (sum(grepl("tbl_df|tbl|data.frame", class(dataSet))) > 0),
-          "\nNo columns in the data set you supplied have the variable stem you provided." = (sum(grepl(paste0("^",x, collapse = "|"), names(dataSet))) > 0),
-          "\nSupplied waves are not whole numbers." = all(sapply(waves, function(x){x %% 1 == 0})))
+stopifnot("\nThe data set you supplied is not a tibble or data frame."
+          = class(dataSet) %in% c("tbl_df","tbl","data.frame"),
+          "\nNo columns in the data set you supplied have the variable stem you provided."
+          = (sum(grepl(paste0("^",x, collapse = "|"),names(dataSet))) > 0),
+          "\nSupplied waves are not whole numbers." = all(vapply(waves, \(x) x %% 1 == 0,logical(1))))
 
-### otherwise proceed
+### otherwise, proceed
 ## extract other specified arguments (these are optional)
-dots_list <- list(...)
-if(length(dots_list) != 0){
-  dots <- unlist(dots_list)
-  groupFlag <- dots[grep("^groupflag$", tolower(names(dots)))]
-  listWise <- dots[grep("^listwise$", tolower(names(dots)))]
-  wave_col_names <- dots[grep("^wave_col_name", tolower(names(dots)))]
-} else{
-  dots <- NULL
-}
-
-## set these inputs to null/pre-determined string
-groupFlag <- if(is.null(dots) | !any(grepl("^groupflag$", tolower(names(dots))))){paste0("w")} else{groupFlag}
-groupFlagWaves <- if(is.null(dots) | !any(grepl("^groupflag$", tolower(names(dots))))){paste0("w", waves)}
-else{paste0(groupFlag, waves)}
-listWise <- if(is.null(dots) | !any(grepl("^listwise$", tolower(names(dots))))){TRUE}else{listWise}
-wave_col_names <- if(is.null(dots) | !any(grepl("^wave_col_name", tolower(names(dots))))){NULL}else{wave_col_names}
-
-## do some checks
-# remove leading underscore if exists in groupFlag/groupFlagWaves
-groupFlag <- gsub(pattern = "^\\_", replacement = "", groupFlag)
-# groupFlagWaves
-groupFlagWaves <- sapply(groupFlagWaves, function(x) gsub("^\\_","", x),USE.NAMES = FALSE)
-# and wave_col_names
-if(!is.null(wave_col_names)){wave_col_names <- sapply(wave_col_names, function(x) gsub("^\\_","", x),USE.NAMES = FALSE)}
-# finally check that the wave/group flags exist. If an error STOP
-if(sum(grepl(paste0(groupFlagWaves,collapse = "|"), names(dataSet))) == 0)
-{stop("\nAt least one of your variables does not have the same group/wave flag. Please check your dataset.")}
+dots <- list(...)
+# set groupFlag
+groupFlag <- if (!is.null(dots[["groupFlag"]])) dots[["groupFlag"]] else "w"
+# remove leading underscore  for groupFlag if exists
+groupFlag <- gsub(pattern = "^_", replacement = "", groupFlag)
+# set groupFlagWaves
+groupFlagWaves <- paste0(groupFlag, waves)
+# set listWise
+listWise <- if (!is.null(dots[["listWise"]])) dots[["listWise"]] else TRUE
+# set wave_col_names
+wave_col_names <- if (!is.null(dots[["wave_col_names"]])) dots[["wave_col_names"]] else NULL
+# remove leading leading underscore  for wave_col_names if exists
+wave_col_names <- gsub("^_","", wave_col_names)
 
 ### Table construction
 ## iterate over all variable stems
-full_mean_tabl <- lapply(x, function(y){
+full_mean_tabl <- lapply(x, \(y){
   # find variables
   xFull <- paste0("^",y, "_" ,groupFlagWaves,"$", collapse = "|")
   # subset the data set by those variables
-  subdat <- dataSet[, grepl(xFull, names(dataSet)) & !grepl("_TEXT$", names(dataSet))]
+  subdat <- dataSet[, grepl(xFull, names(dataSet)) & !grepl("_text$", tolower(names(dataSet))), drop = FALSE]
 
   # if listWise is set to TRUE (default); remove observations through list wise deletion
-  if(listWise){subdat <- stats::na.omit(subdat)}
+  if (listWise){subdat <- stats::na.omit(subdat)}
 
   # convert to numeric type
   subdat2 <- data.frame(lapply(subdat, as.numeric))
   # count number of observations
-  mean_tabl <- apply(subdat2, 2, function(x) {mean(x, na.rm = TRUE)})
+  mean_tabl <- colMeans(subdat2, na.rm = TRUE)
 
   # replace column names: first set to numbers
   names(mean_tabl) <- gsub(pattern = paste0(y,"_",groupFlag),

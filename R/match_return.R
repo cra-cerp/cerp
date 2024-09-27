@@ -25,15 +25,18 @@
 match_return <- function(searchVal, lookUpDataFrame, lookUpCol, returnCol){
 
 ### quick check for data frame and lookup/return columns
-stopifnot("\nThe look-up data frame you supplied is not a tibble or data frame." = (sum(grepl("tbl_df|tbl|data.frame", class(lookUpDataFrame))) > 0),
-          "\nThe look-up column you supplied does not exist in the supplied data frame" = (sum(grepl(lookUpCol, names(lookUpDataFrame))) > 0),
-          "\nThe return column you supplied does not exist in the supplied data frame" = (sum(grepl(returnCol, names(lookUpDataFrame))) > 0))
+stopifnot("\nThe look-up table you supplied is not a tibble or data frame." =
+            class(lookUpDataFrame) %in% c("tbl_df","tbl","data.frame"),
+          "\nThe look-up column you specified does not exist in the supplied data frame" =
+            lookUpCol %in% names(lookUpDataFrame),
+          "\nThe return column you specified does not exist in the supplied data frame" =
+            returnCol %in% names(lookUpDataFrame))
 
 ### otherwise, proceed
 ## iterate over searchVal
-sapply(searchVal, function(toSearch){
+unlist(lapply(searchVal, function(toSearch){
   # search for match and return
   lookUpDataFrame[match(escape_punct(toSearch), lookUpDataFrame[[lookUpCol]]), returnCol]
-})
+}))
 
 }

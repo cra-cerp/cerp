@@ -11,7 +11,8 @@ merge_dfList(dfLists)
 }
 \description{
 This is a generalized version of merge_dataframes_lists as key ids are chosen from data sets
-that are merged. NOTE: by default no sorting takes place.
+that are merged. NOTE: by default no sorting takes place and the key data frame is the first
+data frame that appears in the list
 }
 \examples{
 # Example

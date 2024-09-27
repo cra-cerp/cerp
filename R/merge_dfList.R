@@ -2,7 +2,8 @@
 #'
 #' @description
 #' This is a generalized version of merge_dataframes_lists as key ids are chosen from data sets
-#' that are merged. NOTE: by default no sorting takes place.
+#' that are merged. NOTE: by default no sorting takes place and the key data frame is the first
+#' data frame that appears in the list
 #'
 #' @param dfLists list of data frames or tibbles.
 #'
@@ -19,7 +20,7 @@ merge_dfList <- function(dfLists) {
 
 ### quick check for list of data frames/tibbles
 stopifnot("\nThe list of data frames/tibbles you supplied has at least one object that is not a tibble or data frame."
-          = (all(sapply(dfLists, function(x) sum(grepl("tbl_df|tbl|data.frame", class(x))) > 0))))
+          = all(vapply(dfLists, \(x) class(x) %in% c("tbl_df","tbl","data.frame"), logical(1))))
 
 ### reduce into one data frame
 Reduce(function(x,y) merge(x = x, y = y, all.x  = TRUE, sort = FALSE), dfLists)

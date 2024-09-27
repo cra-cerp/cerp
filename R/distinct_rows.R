@@ -45,24 +45,18 @@
 distinct_rows <- function(dataset, column, retain, keep_allVars, ...){
 
 ### quick check on required parameters
-stopifnot("\nThe data set you supplied is not a tibble or data frame." =
-            (sum(grepl("tbl_df|tbl|data.frame", class(dataset))) > 0))
+stopifnot("\nThe data set you supplied is not a tibble or data frame." = class(dataset) %in% c("tbl_df","tbl","data.frame"))
 
 ### otherwise, proceed
 ## create count unique function
 countUnique <- function(vectorValues){
-
-uniqueVals <- lapply(unique(vectorValues), FUN = function(x){
-  1:length(vectorValues[vectorValues == x])
-  })
-unlist(uniqueVals)
-
+unlist(lapply(unique(vectorValues), \(x){1:length(vectorValues[vectorValues == x])}))
 }
 
 ## set up
 dataset <- dataset
 originalVars <- names(dataset)
-dataset$order <- 1:nrow(dataset)
+dataset$order <- seq_len(nrow(dataset))
 column <- as.character(substitute(column))
 column <- paste0(column)
 retain <- as.character(substitute(retain))
@@ -71,18 +65,14 @@ keep_allVars <- as.character(substitute(keep_allVars))
 keep_allVars <- paste0(keep_allVars)
 keep_allVars <- ifelse(grepl("t|true|y|yes|1", tolower(keep_allVars)), TRUE, FALSE)
 
-## check for dots_list
-dots_list <- as.list(substitute(...()))
-if(length(dots_list) !=0){
-	dots <- unlist(dots_list)
-    add_cols <- dots[grep("^column", names(dots))]
-    add_cols <- paste0(add_cols)
-} else{
-  dots <- NULL
+## extract other specified arguments (these are optional)
+dots <- as.list(substitute(...()))
+# set add_cols
+add_cols <- if (length(grep("^column", tolower(names(dots)))) > 0) {
+  unlist(paste0(dots[grep("^column", names(dots))]),use.names = FALSE) }
+else {
+  NULL
 }
-
-## set default input values
-add_cols <- if(is.null(dots) | is.null(dots[grep("^column", names(dots))])){NULL} else{add_cols}
 
 ## all columns
 add_cols <- c(column, add_cols)
@@ -113,7 +103,7 @@ dataset <- dataset[dataset$distinct == 0, ]
 dataset <- dataset[order(dataset$order, decreasing = FALSE),]
 
 ## retain all variables Y/N
-if(isTRUE(keep_allVars) | grepl("t|true|y|yes", tolower(as.character(keep_allVars)))){
+if(keep_allVars | grepl("t|true|y|yes", tolower(as.character(keep_allVars)))){
 	dataset <- subset(dataset, select = originalVars)
 } else{
 	dataset <- subset(dataset, select = column)

@@ -38,34 +38,28 @@
 factor_labels <- function(x, key, ...){
 
 ### quick check key
-stopifnot("\nThe key you supplied is not a tibble or data frame." = (sum(grepl("tbl_df|tbl|data.frame", class(key))) > 0))
+stopifnot("\nThe key you supplied is not a tibble or data frame." = class(key) %in% c("tbl_df","tbl","data.frame"))
 
 ### otherwise, proceed
-## extract from dots
-dots_list <- list(...)
-if(length(dots_list) != 0){
-  dots <- unlist(dots_list)
-  variableName_col <- dots[grepl("^variablename_col$", tolower(names(dots)))]
-  valueLabels_col <- dots[grepl("^valuelabels_col$", tolower(names(dots)))]
-} else{
-  dots <- NULL
-}
-
-## otherwise set these inputs to null/pre-determined string
-variableName_col <- if(is.null(dots) | !any(grepl("^variablename_col$", tolower(names(dots))))){"variableName"} else{variableName_col}
-valueLabels_col <- if(is.null(dots) | !any(grepl("^valuelabels_col$", tolower(names(dots))))){"valueLabels"} else{valueLabels_col}
+## extract other specified arguments (these are optional)
+dots <- list(...)
+# set variableName_col
+variableName_col <- if (!is.null(dots[["variableName_col"]])) dots[["variableName_col"]] else "variableName"
+# set valueLabels_col
+valueLabels_col <- if (!is.null(dots[["valueLabels_col"]])) dots[["valueLabels_col"]] else "valueLabels"
+# set addDelim
+addDelim <- if (!is.null(dots[["addDelim"]])) dots[["addDelim"]] else ";"
 
 #### begin main transformation
 ## extract variable name
-x_name <- cerp::rename_cols(x)
+x_name <- rename_cols(x)
 
 ### check that variable name exists in key
-stopifnot("\nThe column name you specified is not in the supplied data set." = (sum(grepl(paste0("^",x_name,"$"), key[[variableName_col]])) > 0))
+stopifnot("\nThe column name you specified is not in the supplied data set." = x_name %in% key[[variableName_col]])
 
 ## subset key
-key <- data.frame(key[grepl(paste0("^",x_name, "$"), key[[variableName_col]]),])
+key <- key[key[variableName_col] == x_name,][[valueLabels_col]]
 
 ## return vector of values
-cerp::vlulist(key[[valueLabels_col]])
-
+vlulist(key, addDelim = addDelim)
 }

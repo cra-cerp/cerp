@@ -31,24 +31,17 @@ rename_cols <- function(x, ...){
 ### quick check for x
 stopifnot("\nThe object 'x' you supplied is not of type vector." = is.vector(x))
 
-### otherwise, proceed.
-## extract dots
-dots_list <- list(...)
-if(length(dots_list) != 0){
-  dots <- unlist(dots_list)
-  groupFlag <- dots[grep("^groupflag$", tolower(names(dots)))]
-}else{
-  dots <-NULL
-}
-
-## set these inputs to null/predetermined string
-groupFlag <- if(is.null(dots)|!any(grepl("^groupflag$", tolower(names(dots))))){"_w\\d$"}else{groupFlag}
-## check that groupFlag ends in a digit
-groupFlag <- ifelse(grepl(cerp::escape_punct("\\d$"), groupFlag), groupFlag, paste0(groupFlag, "\\d$"))
-## check that groupFlag as underscore
+### proceed otherwise
+## extract other specified arguments (these are optional)
+dots <- list(...)
+# set groupFlag
+groupFlag <- if (!is.null(dots[["groupFlag"]])) dots[["groupFlag"]] else "_w\\d$"
+# check that groupFlag ends in a digit (if not add)
+groupFlag <- ifelse(grepl(escape_punct("\\d$"), groupFlag), groupFlag, paste0(groupFlag, "\\d$"))
+# check that groupFlag as underscore
 groupFlag <- ifelse(grepl(pattern = "^_", x = groupFlag), groupFlag, paste0("_",groupFlag))
 
-## remove group/time flag + return vector
+## remove group/time flag + return vector of stem names
 gsub(x = x, pattern = groupFlag, replacement = "")
 
 }

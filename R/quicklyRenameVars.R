@@ -27,11 +27,11 @@
 quicklyRenameVars <- function(dataSet, codeBook, currentVar, oldNameCol, newNameCol){
 
 ### quick check for list of data frames/tibbles
-stopifnot("\nThe list of data frames/tibbles you supplied has at least one object that is not a tibble or data frame."
-          = (all(sapply(list(dataSet, codeBook), function(x) sum(grepl("tbl_df|tbl|data.frame", class(x))) > 0))))
+stopifnot("\nAt least one of the tables supplied is not a tibble or data frame."
+            = all(vapply(list(dataSet, codeBook), \(x) class(x) %in% c("tbl_df","tbl","data.frame"), logical(1))))
 
 ### find new names by iterating over current variable names
-newNames <- sapply(currentVar, function(currentName){
+unlist(lapply(currentVar, function(currentName){
 ## find row in codebook with the existing name
 currentRow <- codeBook[grepl(paste0("^", currentName,"$"), codeBook[[oldNameCol]]),]
 ## return new name if it exists otherwise keep current name
@@ -41,8 +41,6 @@ if(length(currentRow[[newNameCol]]) == 0){
   ## otherwise, do nothing
 	currentRow[[newNameCol]]
    }
-})
-# unlist new names
-unlist(newNames)
-
+  })
+ )
 }

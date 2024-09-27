@@ -46,31 +46,24 @@ stopifnot("\nThe object you would like to check for string matches is not of typ
           "\nThe objectDictionary you would like to use to extract matched string from is not of type vector."
           = is.vector(objectDictionary))
 
-### proceed otherwise
+### otherwise, proceed
 ## extract other specified arguments (these are optional)
-dots_list <- list(...)
-if(length(dots_list) != 0){
-  dots <- unlist(dots_list)
-  objectEscape <- dots[grepl("objectescape", tolower(names(dots)))]
-  objectDictEscape <- dots[grepl("objectdictescape", tolower(names(dots)))]
-  specialRun <- dots[grepl("specialrun", tolower(names(dots)))]
-  invert <- dots[grepl("invert", tolower(names(dots)))]
-} else{
-  dots <- NULL
-}
+dots <- list(...)
+# set objectEscape
+objectEscape <- if (!is.null(dots[["objectEscape"]])) dots[["objectEscape"]] else FALSE
+# set objectDictEscape
+objectDictEscape <- if (!is.null(dots[["objectDictEscape"]])) dots[["objectDictEscape"]] else FALSE
+# set specialRun
+specialRun <- if (!is.null(dots[["specialRun"]])) dots[["specialRun"]] else FALSE
+# set invert
+invert <- if (!is.null(dots[["invert"]])) dots[["invert"]] else FALSE
 
-## set these inputs to null/pre-determined string
-objectEscape <- if(is.null(dots) | !any(grepl("objectescape", tolower(names(dots))))){FALSE} else{objectEscape}
-objectDictEscape <- if(is.null(dots) | !any(grepl("objectdictescape", tolower(names(dots))))){FALSE} else{objectDictEscape}
-specialRun <- if(is.null(dots) | !any(grepl("specialrun", tolower(names(dots))))){FALSE} else{specialRun}
-invert <- if(is.null(dots) | !any(grepl("invert", tolower(names(dots))))){FALSE} else{invert}
-
-## clean object dictionary (questioning: only for survey question cases)
+## QUESTIONING: clean object dictionary (only for survey question cases)
 objectDictionary <- gsub("\\$.*\\{.*\\}.*", "", objectDictionary)
 
 ## escape punctuations
-if(objectEscape){object <- cerp::escape_punct(object)}
-if(objectDictEscape){objectDictionary <- cerp::escape_punct(objectDictionary)}
+if (objectEscape){object <- escape_punct(object)}
+if (objectDictEscape){objectDictionary <- escape_punct(objectDictionary)}
 
 ### begin find/match and extract
 unlist(lapply(seq_along(object), function(i){

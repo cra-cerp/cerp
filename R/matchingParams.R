@@ -19,18 +19,11 @@ matchingParams <- function(variableName, ...) {
 ### quick check for variableName
 stopifnot("\nThe variable names argument you supplied is not of type vector." = is.vector(variableName))
 
-### otherwise, proceed
-## extract from dots
-dots_list <- list(...)
-if(length(dots_list) != 0){
-  dots <- unlist(dots_list)
-  groupFlag <- dots[grep("^groupflag$", tolower(names(dots)))]
-} else{
-  dots <- NULL
-}
-
-## set these inputs to null/pre-determined string
-groupFlag <- if(is.null(dots) | !any(grepl("^groupflag$", tolower(names(dots))))){"_w"} else{groupFlag}
+### proceed otherwise
+## extract other specified arguments (these are optional)
+dots <- list(...)
+# set groupFlag
+groupFlag <- if (!is.null(dots[["groupFlag"]])) dots[["groupFlag"]] else "_w"
 
 ## return variable names to match
 c(paste0("^", variableName, "$"),paste0("^", variableName, groupFlag))
