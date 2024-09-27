@@ -47,7 +47,7 @@ mergeNamesTabl <- function(fullTabl, auxTabl, vars_to_add, ...){
 
 ### quick check key
 stopifnot("\nAt least one of the tables supplied is not a tibble or data frame."
-          = all(vapply(list(fullTabl,auxTabl), \(x) class(x) %in% c("tbl_df","tbl","data.frame"), logical(1))))
+          = all(vapply(list(fullTabl,auxTabl), \(x) any(class(x) %in% c("tbl_df","tbl","data.frame")), logical(1))))
 
 ### otherwise, proceed
 ## extract other specified arguments (these are optional)

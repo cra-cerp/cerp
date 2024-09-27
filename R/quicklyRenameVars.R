@@ -28,7 +28,7 @@ quicklyRenameVars <- function(dataSet, codeBook, currentVar, oldNameCol, newName
 
 ### quick check for list of data frames/tibbles
 stopifnot("\nAt least one of the tables supplied is not a tibble or data frame."
-            = all(vapply(list(dataSet, codeBook), \(x) class(x) %in% c("tbl_df","tbl","data.frame"), logical(1))))
+            = all(vapply(list(dataSet, codeBook), \(x) any(class(x) %in% c("tbl_df","tbl","data.frame")), logical(1))))
 
 ### find new names by iterating over current variable names
 unlist(lapply(currentVar, function(currentName){

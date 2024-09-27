@@ -20,7 +20,7 @@ merge_dfList <- function(dfLists) {
 
 ### quick check for list of data frames/tibbles
 stopifnot("\nThe list of data frames/tibbles you supplied has at least one object that is not a tibble or data frame."
-          = all(vapply(dfLists, \(x) class(x) %in% c("tbl_df","tbl","data.frame"), logical(1))))
+          = all(vapply(dfLists, \(x) any(class(x) %in% c("tbl_df","tbl","data.frame")), logical(1))))
 
 ### reduce into one data frame
 Reduce(function(x,y) merge(x = x, y = y, all.x  = TRUE, sort = FALSE), dfLists)
