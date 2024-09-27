@@ -22,13 +22,13 @@ stopifnot("\nThe data set you supplied is not a tibble or data frame." = class(d
 
 ### otherwise, proceed
 ## iterate over all specified variables
-all_labels <- lapply(variableName, \(variableName){
+all_labels <- lapply(variableName, \(x){
   # find variable index
-  varIndex <- grep(paste0("^", variableName,"$"), names(dataSet))
+  varIndex <- grep(paste0("^", x,"$"), names(dataSet))
   # extract attribute
   currentLabel <- attributes(dataSet[[varIndex]])$"label"
   # NOTE: varLabel is reset to CHECK if label is missing
-  data.frame(varName = variableName, varLabel = ifelse(length(currentLabel) != 1, currentLabel, "CHECK"))
+  data.frame(varName = x, varLabel = ifelse(is.null(currentLabel), "CHECK", currentLabel))
 })
 
 ## combine into data frame
