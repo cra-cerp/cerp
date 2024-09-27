@@ -18,7 +18,8 @@ variableName <- escape_punct(variableName)
 
 ### quick check on required parameters
 stopifnot("\nThe data set you supplied is not a tibble or data frame." = class(dataSet) %in% c("tbl_df","tbl","data.frame"),
-          "\nOne or more variables specified do not exist in the supplied data set.\n" = all(variableName %in% names(dataSet)))
+          "\nOne or more variables specified do not exist in the supplied data set.\n" =
+            all(grepl(paste0(escape_punct(variableName), collapse = "|"), names(dataSet))))
 
 ### otherwise, proceed
 ## iterate over all specified variables
