@@ -40,6 +40,11 @@ stopifnot("\nThe data set you supplied is not a tibble or data frame." = class(d
           "\nThe column name you specified is not in the supplied data set." = columnName %in% names(dataSet))
 
 ### proceed otherwise
+## convert to data frame
+if(length(class(dataSet)) > 1){
+  warning("Coercing supplied dataSet to a data.frame.")
+  dataSet <- as.data.frame(dataSet)
+}
 ## set row id numbers
 dataSet$rowID <- seq_len(nrow(dataSet))
 
