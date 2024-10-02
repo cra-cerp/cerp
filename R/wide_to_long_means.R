@@ -51,7 +51,7 @@ wide_to_long_means <- function(dataSet, x, waves, ...){
 
 ### quick check on required parameters
 stopifnot("\nThe data set you supplied is not a tibble or data frame."
-          = class(dataSet) %in% c("tbl_df","tbl","data.frame"),
+          = any(class(dataSet) %in% c("tbl_df","tbl","data.frame")),
           "\nNo columns in the data set you supplied have the variable stem you provided."
           = (sum(grepl(paste0("^",x, collapse = "|"),names(dataSet))) > 0),
           "\nSupplied waves are not whole numbers." = all(vapply(waves, \(x) x %% 1 == 0,logical(1))))

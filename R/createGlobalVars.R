@@ -32,7 +32,7 @@
 createGlobalVars <- function(dataSet, listVarStems,...){
 
 ### quick check on required parameters
-stopifnot("\nThe data set you supplied is not a tibble or data frame." = class(dataSet) %in% c("tbl_df","tbl","data.frame"),
+stopifnot("\nThe data set you supplied is not a tibble or data frame." = any(class(dataSet) %in% c("tbl_df","tbl","data.frame")),
           "\nThe variable stems you supplied are not in a vector." = is.vector(listVarStems))
 
 ### proceed otherwise

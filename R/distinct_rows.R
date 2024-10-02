@@ -45,7 +45,7 @@
 distinct_rows <- function(dataset, column, retain, keep_allVars, ...){
 
 ### quick check on required parameters
-stopifnot("\nThe data set you supplied is not a tibble or data frame." = class(dataset) %in% c("tbl_df","tbl","data.frame"))
+stopifnot("\nThe data set you supplied is not a tibble or data frame." = any(class(dataset) %in% c("tbl_df","tbl","data.frame")))
 
 ### otherwise, proceed
 ## create count unique function

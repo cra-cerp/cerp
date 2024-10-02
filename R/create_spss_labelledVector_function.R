@@ -64,7 +64,7 @@
 create_spss_labelledVector_function <- function(dataSet, variableName,...){
 
 ### quick check on required parameters
-stopifnot("\nThe data set you supplied is not a tibble or data frame." = class(dataSet) %in% c("tbl_df","tbl","data.frame"),
+stopifnot("\nThe data set you supplied is not a tibble or data frame." = any(class(dataSet) %in% c("tbl_df","tbl","data.frame")),
           "\nThe column name you specified is not in the supplied data set." = variableName %in% names(dataSet))
 
 ### proceed otherwise

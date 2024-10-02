@@ -37,7 +37,7 @@
 factor_levels <- function(x, key, ...){
 
 ### quick check key
-stopifnot("\nThe key you supplied is not a tibble or data frame." = class(key) %in% c("tbl_df","tbl","data.frame"))
+stopifnot("\nThe key you supplied is not a tibble or data frame." = any(class(key) %in% c("tbl_df","tbl","data.frame")))
 
 ### otherwise, proceed
 ## extract other specified arguments (these are optional)

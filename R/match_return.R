@@ -26,7 +26,7 @@ match_return <- function(searchVal, lookUpDataFrame, lookUpCol, returnCol){
 
 ### quick check for data frame and lookup/return columns
 stopifnot("\nThe look-up table you supplied is not a tibble or data frame." =
-            class(lookUpDataFrame) %in% c("tbl_df","tbl","data.frame"),
+            any(class(lookUpDataFrame) %in% c("tbl_df","tbl","data.frame")),
           "\nThe look-up column you specified does not exist in the supplied data frame" =
             lookUpCol %in% names(lookUpDataFrame),
           "\nThe return column you specified does not exist in the supplied data frame" =
