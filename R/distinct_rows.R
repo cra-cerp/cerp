@@ -69,7 +69,7 @@ keep_allVars <- ifelse(grepl("t|true|y|yes|1", tolower(keep_allVars)), TRUE, FAL
 dots <- as.list(substitute(...()))
 # set add_cols
 add_cols <- if (length(grep("^column", tolower(names(dots)))) > 0) {
-  unlist(paste0(dots[grep("^column", names(dots))]),use.names = FALSE) }
+  unlist(paste0(dots[grep("^column", tolower(names(dots)))]),use.names = FALSE) }
 else {
   NULL
 }
