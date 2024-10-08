@@ -23,15 +23,13 @@
 reorderCols <- function(dataSet, colReorder, newOrder){
 
 ### quick check for list of data frames/tibbles
-stopifnot("\nThe data set you supplied is not a tibble or data frame."= 
+stopifnot("\nThe data set you supplied is not a tibble or data frame."=
 any(class(dataSet) %in% c("tbl_df","tbl","data.frame")))
 
 ### otherwise, proceed
-## extract column name
-colReorder <- as.character(substitute(colReorder))
 ## reorder
 # if the column exists reorder
-if(colReorder %in% names(dataSet)){ 
+if(colReorder %in% names(dataSet)){
 	dataSet[order(match(dataSet[[colReorder]],newOrder)),]
 # else stop
 } else{
