@@ -97,9 +97,9 @@ full_mean_tabl <- lapply(x, \(y){
     names(mean_tabl) <- paste0(wave_col_names, "_mean")
   } else{
     # if not: use default names for table
-    names(mean_tabl)[grepl("^1$", names(mean_tabl))] <- "Pre_n"
-    names(mean_tabl)[grepl("^2$", names(mean_tabl))] <- "Post_n"
-    names(mean_tabl)[grepl("^3$", names(mean_tabl))] <- "Follow-Up_n"
+    names(mean_tabl)[grepl("^1$", names(mean_tabl))] <- "Pre_mean"
+    names(mean_tabl)[grepl("^2$", names(mean_tabl))] <- "Post_mean"
+    names(mean_tabl)[grepl("^3$", names(mean_tabl))] <- "Follow-Up_mean"
   }
 
   # add variable name tag
