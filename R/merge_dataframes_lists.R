@@ -25,10 +25,14 @@ stopifnot("\nThe list of data frames/tibbles you supplied has at least one objec
           = all(vapply(dfLists, \(x) any(class(x) %in% c("tbl_df","tbl","data.frame")), logical(1))))
 
 ### proceed otherwise
-## extract other specified arguments (these are optional)
+## extract other specified arguments & set defaults
 dots <- list(...)
 # set keyColumn
-keyColumn <- if (!is.null(dots[["keyColumn"]])) dots[["keyColumn"]] else "CERPID"
+keyColumn <- if (!is.null(dots[["keyColumn"]])) {
+  dots[["keyColumn"]]
+  }else {
+    "CERPID"
+  }
 
 ## quick check for key column in all objects
 stopifnot("\nAt least one object does not contain the key column."

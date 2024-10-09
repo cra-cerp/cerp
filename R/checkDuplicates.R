@@ -40,15 +40,16 @@ stopifnot("\nThe data set you supplied is not a tibble or data frame." = any(cla
           "\nThe column name you specified is not in the supplied data set." = columnName %in% names(dataSet))
 
 ### proceed otherwise
-## convert to data frame
-if(length(class(dataSet)) > 1){
-  warning("Coercing supplied dataSet to a data.frame.")
-  dataSet <- as.data.frame(dataSet)
+## warning (coerce to data.frame)
+if(any(class(dataSet) %in% c("tbl_df","tbl"))){
+	warning("Coercing dataSet to data.frame.", immediate = TRUE)
+	dataSet <- as.data.frame(dataSet)
 }
+
 ## set row id numbers
 dataSet$rowID <- seq_len(nrow(dataSet))
 
-## extract other specified arguments (these are optional)
+## extract other specified arguments & set defaults
 dots <- list(...)
 # set splitDelim
 splitDelim <- if (!is.null(dots[["splitDelim"]])) dots[["splitDelim"]] else NULL

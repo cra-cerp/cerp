@@ -41,14 +41,29 @@ factor_labels <- function(x, key, ...){
 stopifnot("\nThe key you supplied is not a tibble or data frame." = any(class(key) %in% c("tbl_df","tbl","data.frame")))
 
 ### otherwise, proceed
-## extract other specified arguments (these are optional)
+## extract other specified arguments & set defaults
 dots <- list(...)
 # set variableName_col
-variableName_col <- if (!is.null(dots[["variableName_col"]])) dots[["variableName_col"]] else "variableName"
+variableName_col <-
+  if (!is.null(dots[["variableName_col"]])) {
+    dots[["variableName_col"]] }
+  else {
+    "variableName"
+  }
 # set valueLabels_col
-valueLabels_col <- if (!is.null(dots[["valueLabels_col"]])) dots[["valueLabels_col"]] else "valueLabels"
+valueLabels_col <-
+  if (!is.null(dots[["valueLabels_col"]])) {
+    dots[["valueLabels_col"]] }
+  else {
+    "valueLabels"
+  }
 # set addDelim
-addDelim <- if (!is.null(dots[["addDelim"]])) dots[["addDelim"]] else ";"
+addDelim <-
+  if (!is.null(dots[["addDelim"]])) {
+    dots[["addDelim"]] }
+  else {
+    ";"
+  }
 
 #### begin main transformation
 ## extract variable name

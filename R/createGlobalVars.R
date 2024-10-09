@@ -36,10 +36,15 @@ stopifnot("\nThe data set you supplied is not a tibble or data frame." = any(cla
           "\nThe variable stems you supplied are not in a vector." = is.vector(listVarStems))
 
 ### proceed otherwise
-## extract other specified arguments (these are optional)
+## extract other specified arguments & set defaults
 dots <- list(...)
 # set groupFlag
-groupFlag <- if (!is.null(dots[["groupFlag"]])) dots[["groupFlag"]] else "_w\\d$"
+groupFlag <-
+  if (!is.null(dots[["groupFlag"]])) {
+    dots[["groupFlag"]] }
+  else {
+    "_w\\d$"
+  }
 # check that groupFlag ends in a digit
 groupFlag <- ifelse(grepl(escape_punct("\\d$"), groupFlag), groupFlag, paste0(groupFlag, "\\d$"))
 # check that groupFlag as underscore

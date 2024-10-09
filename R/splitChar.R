@@ -36,10 +36,15 @@ stopifnot("\nThe vector you supplied is not of type vector." = is.vector(vector)
             all(vapply(elementToKeep, \(x) x %% 1 == 0,logical(1))))
 
 ### otherwise, proceed
-## extract other specified arguments (these are optional)
+## extract other specified arguments & set defaults
 dots <- list(...)
 # set addDelim
-addDelim <- if (!is.null(dots[["addDelim"]])) dots[["addDelim"]] else ""
+addDelim <-
+  if (!is.null(dots[["addDelim"]])) {
+    dots[["addDelim"]] }
+  else {
+    ""
+  }
 
 ### main manipulation
 ## iterate over vector
@@ -50,7 +55,7 @@ unlist(lapply(vector, function(currentVec){
   splitStr <- splitStr[!is.na(splitStr)]
   # to return
   paste0(splitStr, collapse = addDelim)
-})
-)
+  })
+  )
 }
 

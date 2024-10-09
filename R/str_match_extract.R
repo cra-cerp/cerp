@@ -15,7 +15,7 @@
 #'  separated by a semi-colon (e.g., match1; match2; match3). The default is FALSE, as only one match
 #'  is typically expected.
 #'  \item \code{invert}: An optional argument that when set to TRUE will return values for elements that
-#'  do not match
+#'  do not match.
 #'  }
 #'
 #' @author Ama Nyame-Mensah
@@ -47,16 +47,36 @@ stopifnot("\nThe object you would like to check for string matches is not of typ
           = is.vector(objectDictionary))
 
 ### otherwise, proceed
-## extract other specified arguments (these are optional)
+## extract other specified arguments & set defaults
 dots <- list(...)
 # set objectEscape
-objectEscape <- if (!is.null(dots[["objectEscape"]])) dots[["objectEscape"]] else FALSE
+objectEscape <-
+  if (!is.null(dots[["objectEscape"]])) {
+    dots[["objectEscape"]] }
+  else {
+    FALSE
+  }
 # set objectDictEscape
-objectDictEscape <- if (!is.null(dots[["objectDictEscape"]])) dots[["objectDictEscape"]] else FALSE
+objectDictEscape <-
+  if (!is.null(dots[["objectDictEscape"]])) {
+    dots[["objectDictEscape"]] }
+  else {
+    FALSE
+  }
 # set specialRun
-specialRun <- if (!is.null(dots[["specialRun"]])) dots[["specialRun"]] else FALSE
+specialRun <-
+  if (!is.null(dots[["specialRun"]])) {
+    dots[["specialRun"]] }
+  else {
+    FALSE
+  }
 # set invert
-invert <- if (!is.null(dots[["invert"]])) dots[["invert"]] else FALSE
+invert <-
+  if (!is.null(dots[["invert"]])) {
+    dots[["invert"]] }
+  else {
+    FALSE
+  }
 
 ## QUESTIONING: clean object dictionary (only for survey question cases)
 objectDictionary <- gsub("\\$.*\\{.*\\}.*", "", objectDictionary)

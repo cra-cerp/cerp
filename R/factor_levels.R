@@ -40,14 +40,29 @@ factor_levels <- function(x, key, ...){
 stopifnot("\nThe key you supplied is not a tibble or data frame." = any(class(key) %in% c("tbl_df","tbl","data.frame")))
 
 ### otherwise, proceed
-## extract other specified arguments (these are optional)
+## extract other specified arguments & set defaults
 dots <- list(...)
 # set variableName_col
-variableName_col <- if (!is.null(dots[["variableName_col"]])) dots[["variableName_col"]] else "variableName"
+variableName_col <-
+  if (!is.null(dots[["variableName_col"]])) {
+  dots[["variableName_col"]] }
+  else {
+  "variableName"
+    }
 # set variableValues_col
-variableValues_col <- if (!is.null(dots[["variableValues_col"]])) dots[["variableValues_col"]] else "variableValues"
+variableValues_col <-
+  if (!is.null(dots[["variableValues_col"]])) {
+    dots[["variableValues_col"]] }
+  else {
+    "variableValues"
+  }
 # set addDelim
-addDelim <- if (!is.null(dots[["addDelim"]])) dots[["addDelim"]] else ","
+addDelim <-
+  if (!is.null(dots[["addDelim"]])) {
+    dots[["addDelim"]] }
+  else {
+    ","
+  }
 
 #### begin main transformation
 ## extract variable name

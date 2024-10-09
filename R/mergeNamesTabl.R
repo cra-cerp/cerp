@@ -50,16 +50,36 @@ stopifnot("\nAt least one of the tables supplied is not a tibble or data frame."
           = all(vapply(list(fullTabl,auxTabl), \(x) any(class(x) %in% c("tbl_df","tbl","data.frame")), logical(1))))
 
 ### otherwise, proceed
-## extract other specified arguments (these are optional)
+  ## extract other specified arguments & set defaults
 dots <- list(...)
 # set fullTabl_variableCol
-fullTabl_variableCol <- if (!is.null(dots[["fullTabl_variableCol"]])) dots[["fullTabl_variableCol"]] else "Variable"
+fullTabl_variableCol <-
+  if (!is.null(dots[["fullTabl_variableCol"]])) {
+  dots[["fullTabl_variableCol"]] }
+  else {
+    "Variable"
+  }
 # set auxTabl_variableCol
-auxTabl_variableCol <- if (!is.null(dots[["auxTabl_variableCol"]])) dots[["auxTabl_variableCol"]] else "Variable"
+auxTabl_variableCol <-
+  if (!is.null(dots[["auxTabl_variableCol"]])) {
+  dots[["auxTabl_variableCol"]] }
+  else {
+    "Variable"
+  }
 # set set_commonkey
-set_commonkey <- if (!is.null(dots[["set_commonkey"]])) as.logical(dots[["set_commonkey"]]) else FALSE
+set_commonkey <-
+  if (!is.null(dots[["set_commonkey"]])) {
+  as.logical(dots[["set_commonkey"]]) }
+  else {
+    FALSE
+  }
 # set common_key
-common_key <- if (!is.null(dots[["common_key"]])) dots[["common_key"]] else "Variable"
+common_key <-
+  if (!is.null(dots[["common_key"]])) {
+  dots[["common_key"]] }
+  else {
+    "Variable"
+  }
 
 # rename common key if set
 if(set_commonkey){

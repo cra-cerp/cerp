@@ -65,7 +65,7 @@ keep_allVars <- as.character(substitute(keep_allVars))
 keep_allVars <- paste0(keep_allVars)
 keep_allVars <- ifelse(grepl("t|true|y|yes|1", tolower(keep_allVars)), TRUE, FALSE)
 
-## extract other specified arguments (these are optional)
+## extract other specified arguments & set defaults
 dots <- as.list(substitute(...()))
 # set add_cols
 add_cols <- if (length(grep("^column", tolower(names(dots)))) > 0) {
@@ -78,8 +78,9 @@ else {
 add_cols <- c(column, add_cols)
 
 ## create key column
-dataset[["distinct_key"]] <- if(length(add_cols) > 1){
-	apply(dataset[,add_cols], 1, paste, collapse = "")
+dataset[["distinct_key"]] <-
+if(length(add_cols) > 1){
+	concatenate_cols(dataSet = dataset, column_names = add_cols)
 } else{
 	dataset[[add_cols]]
 }
@@ -103,9 +104,9 @@ dataset <- dataset[dataset$distinct == 0, ]
 dataset <- dataset[order(dataset$order, decreasing = FALSE),]
 
 ## retain all variables Y/N
-if(keep_allVars | grepl("t|true|y|yes", tolower(as.character(keep_allVars)))){
+if (keep_allVars | grepl("t|true|y|yes", tolower(as.character(keep_allVars)))) {
 	dataset <- subset(dataset, select = originalVars)
-} else{
+} else {
 	dataset <- subset(dataset, select = column)
 }
 

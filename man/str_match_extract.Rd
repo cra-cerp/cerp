@@ -21,7 +21,7 @@ str_match_extract(object, objectDictionary, ...)
  separated by a semi-colon (e.g., match1; match2; match3). The default is FALSE, as only one match
  is typically expected.
  \item \code{invert}: An optional argument that when set to TRUE will return values for elements that
- do not match
+ do not match.
  }}
 }
 \description{

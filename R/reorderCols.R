@@ -33,6 +33,6 @@ if(colReorder %in% names(dataSet)){
 	dataSet[order(match(dataSet[[colReorder]],newOrder)),]
 # else stop
 } else{
-	stop("\nThe supplied column to reorder does not exist in the supplied dataSet.")
+	stop("\nThe supplied column to reorder does not exist in dataSet.")
 	}
 }

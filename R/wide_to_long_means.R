@@ -57,18 +57,33 @@ stopifnot("\nThe data set you supplied is not a tibble or data frame."
           "\nSupplied waves are not whole numbers." = all(vapply(waves, \(x) x %% 1 == 0,logical(1))))
 
 ### otherwise, proceed
-## extract other specified arguments (these are optional)
+## extract other specified arguments & set defaults
 dots <- list(...)
 # set groupFlag
-groupFlag <- if (!is.null(dots[["groupFlag"]])) dots[["groupFlag"]] else "w"
+groupFlag <-
+  if (!is.null(dots[["groupFlag"]])) {
+    dots[["groupFlag"]] }
+  else {
+    "w"
+  }
 # remove leading underscore  for groupFlag if exists
 groupFlag <- gsub(pattern = "^_", replacement = "", groupFlag)
 # set groupFlagWaves
 groupFlagWaves <- paste0(groupFlag, waves)
 # set listWise
-listWise <- if (!is.null(dots[["listWise"]])) dots[["listWise"]] else TRUE
+listWise <-
+  if (!is.null(dots[["listWise"]])) {
+    dots[["listWise"]] }
+  else {
+    TRUE
+  }
 # set wave_col_names
-wave_col_names <- if (!is.null(dots[["wave_col_names"]])) dots[["wave_col_names"]] else NULL
+wave_col_names <-
+  if (!is.null(dots[["wave_col_names"]])) {
+    dots[["wave_col_names"]] }
+  else {
+    NULL
+  }
 # remove leading leading underscore  for wave_col_names if exists
 wave_col_names <- gsub("^_","", wave_col_names)
 
@@ -81,7 +96,7 @@ full_mean_tabl <- lapply(x, \(y){
   subdat <- dataSet[, grepl(xFull, names(dataSet)) & !grepl("_text$", tolower(names(dataSet))), drop = FALSE]
 
   # if listWise is set to TRUE (default); remove observations through list wise deletion
-  if (listWise){subdat <- stats::na.omit(subdat)}
+  if (listWise) {subdat <- stats::na.omit(subdat)}
 
   # convert to numeric type
   subdat2 <- data.frame(lapply(subdat, as.numeric))
@@ -95,7 +110,7 @@ full_mean_tabl <- lapply(x, \(y){
   # then check if any were user supplied
   if(length(wave_col_names) > 0){
     names(mean_tabl) <- paste0(wave_col_names, "_mean")
-  } else{
+  } else {
     # if not: use default names for table
     names(mean_tabl)[grepl("^1$", names(mean_tabl))] <- "Pre_mean"
     names(mean_tabl)[grepl("^2$", names(mean_tabl))] <- "Post_mean"

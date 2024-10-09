@@ -19,13 +19,18 @@ vlulist <- function(x,...){
 
 ### quick check for vector
 stopifnot("\nThe x variable you supplied is not of type vector or list." =
-            class(x) %in% c("list","character", "numeric", "integer"))
+            any(class(x) %in% c("list","character", "numeric", "integer")))
 
 ### otherwise, proceed
-## extract other specified arguments (these are optional)
+## extract other specified arguments & set defaults
 dots <- list(...)
 # set addDelim
-addDelim <- if (!is.null(dots[["addDelim"]])) dots[["addDelim"]] else ";"
+addDelim <-
+  if (!is.null(dots[["addDelim"]])) {
+    dots[["addDelim"]] }
+  else {
+    ";"
+  }
 
 ## return vector of values
 toReturn <- suppressWarnings(paste(unlist(strsplit(as.character(x),split = addDelim))))
