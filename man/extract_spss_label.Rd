@@ -4,12 +4,13 @@
 \alias{extract_spss_label}
 \title{Function for extracting variable labels from an SPSS data set}
 \usage{
-extract_spss_label(dataSet, variableName)
+extract_spss_label(df, vars)
 }
 \arguments{
-\item{dataSet}{a tibble or data frame.}
+\item{df}{a tibble or data frame.}
 
-\item{variableName}{character with name of variable in dataSet.}
+\item{vars}{character with name of variable in df. Default is set to all, and all variable
+labels will be extracted}
 }
 \value{
 A data frame with two columns: variable names (column 1) and labels (column 2).

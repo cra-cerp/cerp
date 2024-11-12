@@ -36,6 +36,13 @@ name_data <- data.frame(full_name = c("Linda E. Evans", "Akua Taylor Offor", "He
 name_data$first_middle <- splitChar(vector = name_data$full_name,
 split = " ", elementToKeep = c(1,3), addDelim = " ")
 
+# Example using data from data.gov
+data.gov <- read.csv("https://data.iowa.gov/api/views/djvt-gf3t/rows.csv?accessType=DOWNLOAD")
+# create column to split
+data.gov$city_state <- paste(data.gov$Name, data.gov$State.Name, sep = ", ")
+splitChar(vector = data.gov$city_state, split = ",", elementToKeep = 1)
+
+
 }
 \author{
 Ama Nyame-Mensah

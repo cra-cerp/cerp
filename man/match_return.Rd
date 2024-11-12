@@ -26,7 +26,7 @@ in the same row. Note: NA is returned when no match is found
 \examples{
 race_key <- data.frame(value = 1:5, label = c("Black/African American", "Asian/Asian American",
 "Indigenous", "Native Hawaiian/Pacific Islander", "No entry"))
-race_tabl <- data.frame(race_ethnicity = sample(1:5, size = 10, replace = TRUE))
+race_tabl <- data.frame(race_ethnicity = sample(1:5, size = 500, replace = TRUE))
 race_tabl$race_eth_label <- match_return(race_tabl$race_ethnicity, lookUpDataFrame = race_key,
 lookUpCol = "value", returnCol = "label")
 
