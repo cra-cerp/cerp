@@ -85,27 +85,37 @@ objectDictionary <- gsub("\\$.*\\{.*\\}.*", "", objectDictionary)
 if (objectEscape){object <- escape_punct(object)}
 if (objectDictEscape){objectDictionary <- escape_punct(objectDictionary)}
 
+
+### define parameters
+## combine objectDictionary as a single pattern
+pattern <- paste0(tolower(objectDictionary), collapse = "|")
+
 ### begin find/match and extract
-unlist(lapply(seq_along(object), function(i){
-  match_found <-
-    unlist(regmatches(object[i],
-                      gregexpr(paste0(tolower(objectDictionary), collapse = "|"),
-                               ignore.case = TRUE, object[i]), invert = invert))
+result <- vapply(object, extract_matches, pattern = pattern, invert = invert,
+                 specialRun = specialRun, FUN.VALUE = character(1))
+# return result
+return(result)
 
-  if(length(match_found) == 0){
-    NA
-  } else if(all(length(match_found) > 0, specialRun)){
-      toReturn <- regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"),
-                                                ignore.case = TRUE, object[i]),
-                             invert = invert)
-      toReturn <- unlist(toReturn)[unlist(toReturn) != ""]
-      paste0(toReturn, collapse = "; ")
+}
 
-      } else{
-        toReturn <- regmatches(object[i],gregexpr(paste0(objectDictionary, collapse = "|"),
-                                                  ignore.case = TRUE, object[i]),
-                               invert = invert)
-        unlist(toReturn)[unlist(toReturn) != ""]
-      }
-  }))
+## helper function to process each element
+extract_matches <- function(current_object, pattern, invert, specialRun) {
+  # perform match search
+  match_found <- regmatches(current_object, gregexpr(pattern = pattern,
+                                                     ignore.case = TRUE,
+                                                     text = current_object),
+                                                     invert = invert)
+  # return matches found
+  if(length(match_found[[1]]) == 0) {
+    # return NA if no match found
+    return(NA_character_)
+  } else if (specialRun) {
+    # special handling for matches when specialRun is TRUE
+    toReturn <- match_found[[1]][match_found[[1]] != ""]
+    return(paste(toReturn, collapse = ";"))
+  } else {
+    # normal match return
+    return(match_found[[1]][match_found[[1]] != ""])
+  }
+
 }

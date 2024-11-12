@@ -46,21 +46,23 @@ groupFlag <-
   }
 # check that groupFlag ends in a digit
 groupFlag <- ifelse(grepl(escape_punct("\\d$"), groupFlag), groupFlag, paste0(groupFlag, "\\d$"))
-# check that groupFlag as underscore
+# check that groupFlag has an underscore
 groupFlag <- ifelse(grepl(pattern = "^_", x = groupFlag), groupFlag, paste0("_",groupFlag))
 
-### iterate over x to find group/time flags
-unlist(lapply(x, function(find_groupFlag){
-  # check for time/group flag
-  if(grepl(x = find_groupFlag, pattern = groupFlag)){
+### extract time flags
+result <- vapply(x, find_groupFlag, groupFlag = groupFlag, FUN.VALUE = character(1))
+# return result
+result
+}
+
+## helper function to find group/time flag
+find_groupFlag <- function(x, groupFlag) {
+  if(grepl(x = x, pattern = groupFlag)){
     # if found replace with just the time/groupFlag
-    toReplace <- unlist(strsplit(x = find_groupFlag, split = groupFlag))
-    gsub(pattern = paste0(toReplace,"_"), replacement = "", x = find_groupFlag)
+    toReplace <- strsplit(x = x, split = groupFlag)
+    gsub(pattern = paste0(toReplace,"_"), replacement = "", x = x)
   } else{
-    # other return globalVar
+    # default return globalVar
     "globalVar"
   }
-  })
-)
-
 }

@@ -98,13 +98,26 @@ full_mean_tabl <- lapply(x, \(y){
   # if listWise is set to TRUE (default); remove observations through list wise deletion
   if (listWise) {subdat <- stats::na.omit(subdat)}
 
-  # convert to numeric type
-  subdat2 <- data.frame(lapply(subdat, as.numeric))
-  # count number of observations
-  mean_tabl <- colMeans(subdat2, na.rm = TRUE)
 
-  # replace column names: first set to numbers
-  names(mean_tabl) <- gsub(pattern = paste0(y,"_",groupFlag),
+  # process the table and get means
+  process_mean_table(df = subdat, varStem = y, wave_col_names = wave_col_names,
+                     groupFlag = groupFlag)
+
+})
+
+## row bind using dplyr's smart bind + return tibble
+dplyr::bind_rows(full_mean_tabl)
+
+}
+
+## helper function to process means table
+process_mean_table <- function(df,varStem, wave_col_names, groupFlag) {
+  # convert to numeric and calculate means
+  df <- data.frame(lapply(df, as.numeric))
+  mean_tabl <- colMeans(df, na.rm = TRUE)
+
+  # clean up column names
+  names(mean_tabl) <- gsub(pattern = paste0(varStem,"_",groupFlag),
                            replacement = "", names(mean_tabl))
 
   # then check if any were user supplied
@@ -112,16 +125,12 @@ full_mean_tabl <- lapply(x, \(y){
     names(mean_tabl) <- paste0(wave_col_names, "_mean")
   } else {
     # if not: use default names for table
-    names(mean_tabl)[grepl("^1$", names(mean_tabl))] <- "Pre_mean"
-    names(mean_tabl)[grepl("^2$", names(mean_tabl))] <- "Post_mean"
-    names(mean_tabl)[grepl("^3$", names(mean_tabl))] <- "Follow-Up_mean"
+    names(mean_tabl) <- gsub("^1$", "Pre_mean", names(mean_tabl))
+    names(mean_tabl) <- gsub("^2$", "Post_mean", names(mean_tabl))
+    names(mean_tabl) <- gsub("^3$", "Follow-Up_mean", names(mean_tabl))
   }
 
   # add variable name tag
-  mean_tabl <- c(name = y, mean_tabl)
-  })
-
-### row bind using dplyr's smart bind + return tibble
-do.call(dplyr::bind_rows, full_mean_tabl)
+  return(c(name = varStem, mean_tabl))
 
 }

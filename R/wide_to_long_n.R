@@ -96,29 +96,40 @@ full_ntabl <- lapply(x, \(y){
 	# if listWise is set to TRUE (default); remove observations through list wise deletion
 	if (listWise) {subdat <- stats::na.omit(subdat)}
 
-	# convert to numeric type
-	subdat2 <- data.frame(lapply(subdat, as.numeric))
-	# count number of observations
-	ntabl <- colSums(!is.na(subdat2))
+	# process the table and get n sizes
+	process_n_table(df = subdat, varStem = y, wave_col_names = wave_col_names,
+	                groupFlag = groupFlag)
 
-	# replace column names: first set to numbers
-	names(ntabl) <- gsub(pattern = paste0(y,"_",groupFlag), replacement = "", names(ntabl))
+})
 
-	# then check if any were user supplied
-	if(length(wave_col_names) > 0) {
-	  names(ntabl) <- paste0(wave_col_names, "_n")
-	  } else{
-	    # if not: use default names for table
-	    names(ntabl)[grepl("^1$", names(ntabl))] <- "Pre_n"
-	    names(ntabl)[grepl("^2$", names(ntabl))] <- "Post_n"
-	    names(ntabl)[grepl("^3$", names(ntabl))] <- "Follow-Up_n"
-	   }
-
-	  # add variable name tag
-	  ntabl <- c(name = y,ntabl)
-	  })
-
-### row bind using dplyr's smart bind + return tibble
-do.call(dplyr::bind_rows, full_ntabl)
+## row bind using dplyr's smart bind + return tibble
+dplyr::bind_rows(full_ntabl)
 
 }
+
+
+## helper function to process nsize table
+process_n_table <- function(df,varStem, wave_col_names, groupFlag) {
+  # convert to numeric and calculate nsizes
+  df <- data.frame(lapply(df, as.numeric))
+  ntabl <- colSums(!is.na(df))
+
+  # clean up column names
+  names(ntabl) <- gsub(pattern = paste0(varStem,"_",groupFlag),
+                           replacement = "", names(ntabl))
+
+  # then check if any were user supplied
+  if(length(wave_col_names) > 0){
+    names(ntabl) <- paste0(wave_col_names, "_n")
+  } else {
+    # if not: use default names for table
+    names(ntabl) <- gsub("^1$", "Pre_n", names(ntabl))
+    names(ntabl) <- gsub("^2$", "Post_n", names(ntabl))
+    names(ntabl) <- gsub("^3$", "Follow-Up_n", names(ntabl))
+  }
+
+  # add variable name tag
+  return(c(name = varStem, ntabl))
+
+}
+

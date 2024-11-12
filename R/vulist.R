@@ -33,8 +33,9 @@ addDelim <-
   }
 
 ## return vector of values
-toReturn <- suppressWarnings(paste(unlist(strsplit(as.character(x),split = addDelim))))
-trimws(toReturn)
+toReturn <- trimws(suppressWarnings(paste(strsplit(as.character(x),split = addDelim)[[1]])))
+# return
+toReturn
 
 }
 

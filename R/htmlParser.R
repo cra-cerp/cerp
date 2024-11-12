@@ -16,24 +16,31 @@
 htmlParser <- function(x){
 
 ### quick check on required parameters
-stopifnot("\nThe object you would like to remove html tags/entities from is not of type vector." = is.vector(x))
+stopifnot("\nThe object you would like to remove html tags/entities from is not of type vector." =
+            is.vector(x) || is.character(x))
 
 ### otherwise, proceed
-## replace characters
-x <- mgsub::mgsub(x, pattern = c("<[^>]+>","  ","&rdquo;","&ldquo;","&amp;",
-                                 "&rsquo;","&lsquo;","&#39;",
-                                 "[\u201a\u00c4\u00f4\u2018\u2019\u055A\u201B\uFF07]",
-                                 "&quot;","[^ -~]+"),
+## Step 1: replace html entities and unwanted characters using mgsub
+cleaned_x <- mgsub::mgsub(x,
+                          pattern = c("<[^>]+>", # remove html tags
+                                      "  ", # replace double spaces
+                                      "&rdquo;","&ldquo;","&amp;",
+                                      "&rsquo;","&lsquo;","&#39;",
+                                      "[\u201a\u00c4\u00f4\u2018\u2019\u055A\u201B\uFF07]",
+                                      "&quot;","[^ -~]+"), # remove non-ascii characters
                   replacement = c("" , " ","'","'","'","'","'","'","'","'"," "))
 
-## double check on the blank spaces
-newX <- trimws(x, which = "both")
+## Step 2: remove leading/trailing white space
+cleaned_x <- trimws(cleaned_x)
 
-## strip remaining html
-newX2 <- tryCatch({rvest::html_text(rvest::read_html(newX))},
-                  error = function(e){ return(newX)})
+## Step 3: remove remaining html using rvest (if applicable)
+cleaned_x <- tryCatch({
+  rvest::html_text(rvest::read_html(cleaned_x))},
+  error = function(e){
+    cleaned_x # in-case of error return previously cleaned text
+    })
 
-## str_squish (return cleaned text)
-stringr::str_squish(newX2)
+## Step 4: remove extra spaces and return final result
+stringr::str_squish(cleaned_x)
 
 }

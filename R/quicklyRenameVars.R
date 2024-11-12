@@ -30,17 +30,23 @@ quicklyRenameVars <- function(dataSet, codeBook, currentVar, oldNameCol, newName
 stopifnot("\nAt least one of the tables supplied is not a tibble or data frame."
             = all(vapply(list(dataSet, codeBook), \(x) any(class(x) %in% c("tbl_df","tbl","data.frame")), logical(1))))
 
-### find new names by iterating over current variable names
-unlist(lapply(currentVar, function(currentName){
-## find row in codebook with the existing name
-currentRow <- codeBook[grepl(paste0("^", currentName,"$"), codeBook[[oldNameCol]]),]
-## return new name if it exists otherwise keep current name
-if(length(currentRow[[newNameCol]]) == 0){
-	currentName
-} else{
-  ## otherwise, do nothing
-	currentRow[[newNameCol]]
-   }
-  })
- )
+### check that oldNameCol and newNameCol exist in codeBook
+stopifnot("value supplied to `oldNameCol` does not exists in codeBook" = oldNameCol %in% names(codeBook),
+          "value supplied to `newNameCol` does not exists in codeBook" = newNameCol %in% names(codeBook)
+          )
+
+
+### find new names
+# create a lookup vector
+oldNames <- codeBook[[oldNameCol]]
+newNames <- codeBook[[newNameCol]]
+
+# match the current variables with the old names in codeBook
+matchedIndex <- match(currentVar, oldNames)
+
+# if not match is found (NA) return original name; otherwise return new name
+renamedVars <- ifelse(is.na(matchedIndex), currentVar, newNames[matchedIndex])
+
+# return new names
+renamedVars
 }

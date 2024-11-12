@@ -27,6 +27,13 @@
 #' name_data$first_middle <- splitChar(vector = name_data$full_name,
 #' split = " ", elementToKeep = c(1,3), addDelim = " ")
 #'
+#' # Example using data from data.gov
+#' data.gov <- read.csv("https://data.iowa.gov/api/views/djvt-gf3t/rows.csv?accessType=DOWNLOAD")
+#' # create column to split
+#' data.gov$city_state <- paste(data.gov$Name, data.gov$State.Name, sep = ", ")
+#' splitChar(vector = data.gov$city_state, split = ",", elementToKeep = 1)
+#'
+#'
 #' @export
 splitChar <- function(vector, split, elementToKeep, ...){
 
@@ -46,16 +53,15 @@ addDelim <-
     ""
   }
 
-### main manipulation
-## iterate over vector
-unlist(lapply(vector, function(currentVec){
-  # unlist and split + keep select elements
+### split and keep selected elements
+result <- vapply(vector, \(currentVec) {
   splitStr <- unlist(strsplit(currentVec, split))[elementToKeep]
-  splitStr <- trimws(splitStr)
-  splitStr <- splitStr[!is.na(splitStr)]
-  # to return
+  # remove leading/trailing white space + NA values
+  splitStr <- na.omit(trimws(splitStr))
   paste0(splitStr, collapse = addDelim)
-  })
-  )
+}, character(1))
+
+# return result
+result
 }
 
