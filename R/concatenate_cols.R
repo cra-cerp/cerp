@@ -35,12 +35,6 @@ concatenate_cols <- function(df, vars){
 				 "\nAt least one supplied column name does not exist in the supplied df." =
 				 all(vars %in% names(df)))
 
-	## warning (coerce to data.frame)
-	if(any(class(df) %in% c("tbl_df","tbl"))){
-	warning("Coercing df to data.frame.", immediate = TRUE)
-	df <- as.data.frame(df)
-	}
-
 	## concatenate
 	# do.call(paste0, df[, vars, drop = TRUE])
 	purrr::pmap_chr(df[, vars, drop = FALSE], paste0)
