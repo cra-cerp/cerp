@@ -86,9 +86,9 @@ S7::method(checkDuplicates, S7::class_vector) <-
     # shut the cluster down
     parallel::stopCluster(cl)
 
-  ## use regular do if do is specified
+  ## use regular for loop
   } else {
-    ### iterate through the vector and find duplicates
+    ### iterate over indices and find duplicates
     for (i in indices) {
       # Find the duplicate indices by comparing current element with all other elements
       findDuplicate <- findDuplicates(lowerVec[i], lowerVec[-i], splitDelim = splitDelim)
