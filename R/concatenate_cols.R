@@ -3,8 +3,10 @@
 #' @description This function is similar to tidyr's unite() function and can be used to
 #' concatenate the rows of supplied data frame columns.
 #'
-#' @param dataset A tibble or data frame.
-#' @param column_names A vector of column names.
+#' @importFrom purrr pmap_chr
+#'
+#' @param df A tibble or data frame.
+#' @param vars A vector of column names.
 #'
 #' @returns A vector.
 #'
@@ -16,29 +18,31 @@
 #' date = as.Date(c("2024-05-01","2024-08-01","2024-02-14","2024-05-01","2024-05-01","2024-01-01")),
 #' participantCode = c("NSF REU", "CAHSI", "DREU","DREU", "CAHSI", "NSF REU"))
 #'
-#' concat_example$concat_cols <- concatenate_cols(dataSet = concat_example,
-#' column_names = c("id", "date", "participantCode"))
+#' concat_example$concat_cols <- concatenate_cols(df = concat_example,
+#' vars = c("id", "date", "participantCode"))
 #'
 #' @export
 
-concatenate_cols <- function(dataSet, column_names){
+concatenate_cols <- function(df, vars){
 	## quick object checks
-	# dataSet (check both class and that there is at least one row of data)
-	stopifnot("\nThe dataSet you supplied is not of class tibble or data frame." =
-	any(class(dataSet) %in% c("tbl_df","tbl","data.frame")),
-	"\nThe dataSet you supplied does not contain any observations." =
-	prod(dim(dataSet)) > 0)
-	# column_names (check at least one supplied and that all appear in the data)
-	stopifnot("\nPlease supply at least one column name." = length(column_names) > 0L,
-				 "\nAt least one supplied column name does not exist in the supplied dataSet." =
-				 all(column_names %in% names(dataSet)))
+	# df (check both class and that there is at least one row of data)
+	stopifnot("\nThe df you supplied is not of class tibble or data frame." =
+	any(class(df) %in% c("tbl_df","tbl","data.frame")),
+	"\nThe df you supplied does not contain any observations." =
+	prod(dim(df)) > 0)
+	# vars (check at least one supplied and that all appear in the data)
+	stopifnot("\nPlease supply at least one column name." = length(vars) > 0L,
+				 "\nAt least one supplied column name does not exist in the supplied df." =
+				 all(vars %in% names(df)))
 
 	## warning (coerce to data.frame)
-	if(any(class(dataSet) %in% c("tbl_df","tbl"))){
-	warning("Coercing dataSet to data.frame.", immediate = TRUE)
-	dataSet <- as.data.frame(dataSet)
+	if(any(class(df) %in% c("tbl_df","tbl"))){
+	warning("Coercing df to data.frame.", immediate = TRUE)
+	df <- as.data.frame(df)
 	}
 
 	## concatenate
-	do.call(paste0, dataSet[, column_names, drop = TRUE])
+	# do.call(paste0, df[, vars, drop = TRUE])
+	purrr::pmap_chr(df[, vars, drop = FALSE], paste0)
+
 }

@@ -4,12 +4,12 @@
 \alias{createGlobalVars}
 \title{General function for creating pushed/global vector of values}
 \usage{
-createGlobalVars(dataSet, listVarStems, ...)
+createGlobalVars(df, vars, ..., groupFlag = "_w\\\\d$")
 }
 \arguments{
-\item{dataSet}{A tibble or data frame object.}
+\item{df}{A tibble or data frame object.}
 
-\item{listVarStems}{A character vector of unique variable (name) stems.}
+\item{vars}{A character vector of unique variable (name) stems.}
 
 \item{\dots}{additional parameters to pass to function. These include:
 \itemize{
@@ -19,7 +19,7 @@ createGlobalVars(dataSet, listVarStems, ...)
  }}
 }
 \value{
-A character vector that is column-binded to the original supplied dataSet. NOTE: The most recent
+A character vector that is column-binded to the original supplied df. NOTE: The most recent
 (i.e., LATEST) non-null, non-missing value of the LATEST group/time flag is retained.
 }
 \description{
@@ -29,11 +29,11 @@ response for a record.
 \examples{
 # Example with default group/time flag
 sexBirth_data
-createGlobalVars(dataSet = sexBirth_data, listVarStems = "sex")
+createGlobalVars(df = sexBirth_data, vars = "sex")
 
 # Example with user-specified group/time flag (note the time flag pattern is "_t")
 yearBorn_data
-createGlobalVars(dataSet = yearBorn_data, listVarStems = "yearBorn", groupFlag = "_t")
+createGlobalVars(df = yearBorn_data, vars = "yearBorn", groupFlag = "_t")
 
 }
 \author{

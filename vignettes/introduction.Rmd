@@ -30,14 +30,21 @@ library(cerp)
 `checkDuplicates()` identifies duplicates (via a row id) in a data frame or tibble column. Unique rows will contain a single row id. Non-unique rows will contain two or more row ids. The function is compatible with both Tidyverse and Base R syntax as shown below.
 
 ```{r}
+## returns a vector
+checkDuplicates(x = distinct_rows_data$id)
 
-distinct_rows_data$duplicates <- 
-  checkDuplicates(dataSet = distinct_rows_data, 
-                  columnName = "id")
+## returns a (single column) tibble
+checkDuplicates(x = distinct_rows_data, vars = "id")
 
-distinct_rows_data
+## returns data frame (with a new column called duplicates_id)
+dplyr::mutate(distinct_rows_data, duplicates_ids = checkDuplicates(x = id, vars = x))
 
-dplyr::mutate(distinct_rows_data, duplicates2 = checkDuplicates(dataSet = distinct_rows_data,columnName = "id"))
+## returns a tibble
+dplyr::mutate(tibble::tibble(distinct_rows_data), dupe_ids = checkDuplicates(x = id, vars = x))
+
+## apply across multiple columns
+distinct_rows_data |>
+   dplyr::mutate(dplyr::across(c(id, recordedDate), ~ checkDuplicates(.x), .names = "{.col}_duplicates"))
 
 ```
 
@@ -51,10 +58,10 @@ distinct_rows_data2 <-
   distinct_rows_data[order(distinct_rows_data$id,
                            distinct_rows_data$recordedDate),]
 
-distinct_rows(dataset = distinct_rows_data2, 
+distinct_rows(df = distinct_rows_data2, 
               column = id, retain = first, keep_allVars = TRUE)
 
-distinct_rows(dataset = distinct_rows_data2, 
+distinct_rows(df = distinct_rows_data2, 
               column = id, 
               retain = last, keep_allVars = TRUE)
 
@@ -72,7 +79,7 @@ When creating a global variable, identify the data set and insert a list of vari
 
 sexBirth_data
 
-createGlobalVars(dataSet = sexBirth_data, listVarStems = "sex")
+createGlobalVars(df = sexBirth_data, vars = "sex")
 
 ```
 
@@ -82,7 +89,7 @@ Although most CERP project data that are collected over multiple waves use the v
 
 yearBorn_data
 
-createGlobalVars(dataSet = yearBorn_data, listVarStems = "yearBorn", groupFlag = "_t")
+createGlobalVars(df = yearBorn_data, vars = "yearBorn", groupFlag = "_t")
 
 ```
 

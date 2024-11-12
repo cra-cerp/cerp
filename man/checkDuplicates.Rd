@@ -4,42 +4,42 @@
 \alias{checkDuplicates}
 \title{Identify duplicates in a column and tag with each matched element's row number.}
 \usage{
-checkDuplicates(dataSet, columnName, ...)
+checkDuplicates(x, ...)
 }
 \arguments{
-\item{dataSet}{A tibble or data frame object.}
-
-\item{columnName}{A character vector containing the name of the column to search for
-duplicates. NOTE: the column names can be passed with or without quotes, so long as
-there are not special characters in the column name.}
+\item{x}{A vector or tibble/data frame object.}
 
 \item{\dots}{additional parameters to pass to function. They include:
 \itemize{
- \item \code{splitDelim}: A character string that will separate supplied elements into parts to
- identify potential matches within each each delimiter separated string. Default is NULL and the
- string will not be split.
+ \item \code{vars}: A character vector of column names. Only used when a data.frame/tibble
+is passed. Default is NULL and all columns will be searched for duplicates.
 }}
+
+\item{splitDelim}{A character string that will separate supplied elements into parts to
+identify potential matches within each each delimiter separated string. Default is NULL and the
+string will not be split.}
 }
 \value{
-A character vector. If the same value is identified more than once in the same column,
-the corresponding row number/index for each matched instance is returned.
+A character vector if a vector is supplied. Columns that returned are of type character.
+If the same value is identified more than once in the same column, the corresponding row number/
+index for each matched instance is returned.
 }
 \description{
 This function can be used to identify and tag duplicates in a
-given tibble or data frame column.
+vector, tibble, or data frame. Note: logical vectors  and lists are currently
+not supported.
 }
 \examples{
 # Simple searching for duplicate letters
 letterData <- data.frame(letter = sample(letters[1:15], size = 10, replace = TRUE))
-letterData$duplicates <- checkDuplicates(dataSet = letterData, columnName = "letter")
+letterData$duplicates <- checkDuplicates(x = letterData$letter)
 letterData
 
-# An example where one row has multiple elements to check duplicates for
+# An example using splitDelim
 colorData <- data.frame(colors = c("PurPle,Green", "blue", "Green", "blue",
 "RED","purple"))
-colorData$duplicates <- checkDuplicates(dataSet = colorData,
-columnName = "colors", splitDelim = ",")
-colorData
+colorData |> dplyr::mutate(colorData_dupes = checkDuplicates(x = colorData$colors,
+splitDelim = ","))
 
 }
 \author{

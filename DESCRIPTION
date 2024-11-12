@@ -14,7 +14,9 @@ Imports:
     mgsub,
     rlang,
     rvest,
-    stringr
+    stringr,
+    purrr,
+    S7
 RoxygenNote: 7.3.1
 Depends: 
     R (>= 3.5.0)
@@ -22,3 +24,33 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Collate: 
+    'zzz.R'
+    'checkDuplicates.R'
+    'concatenate_cols.R'
+    'createGlobalVars.R'
+    'create_spss_labelledVector_function.R'
+    'data.R'
+    'distinct_rows.R'
+    'escape_punct.R'
+    'extract_spss_label.R'
+    'factor_labels.R'
+    'factor_levels.R'
+    'htmlParser.R'
+    'match_return.R'
+    'matchingParams.R'
+    'mergeNamesTabl.R'
+    'merge_dataframes_lists.R'
+    'merge_dfList.R'
+    'not_in_operator.R'
+    'quicklyRenameVars.R'
+    'recode_key_apply.R'
+    'rename_cols.R'
+    'reorderCols.R'
+    'splitChar.R'
+    'str_match_extract.R'
+    'timeFlag_cols.R'
+    'vlulist.R'
+    'vulist.R'
+    'wide_to_long_means.R'
+    'wide_to_long_n.R'

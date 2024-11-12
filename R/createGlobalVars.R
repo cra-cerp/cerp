@@ -4,9 +4,11 @@
 #' response for a record.
 #'
 #' @importFrom mgsub mgsub
+#' @importFrom tidytable as_tidytable
+#' @importFrom purrr map_chr
 #'
-#' @param dataSet A tibble or data frame object.
-#' @param listVarStems A character vector of unique variable (name) stems.
+#' @param df A tibble or data frame object.
+#' @param vars A character vector of unique variable (name) stems.
 #' @param \dots additional parameters to pass to function. These include:
 #' \itemize{
 #'  \item \code{groupFlag}: An optional parameter that is a character vector containing the group
@@ -16,88 +18,85 @@
 #'
 #' @author Ama Nyame-Mensah
 #'
-#' @returns A character vector that is column-binded to the original supplied dataSet. NOTE: The most recent
+#' @returns A character vector that is column-binded to the original supplied df. NOTE: The most recent
 #' (i.e., LATEST) non-null, non-missing value of the LATEST group/time flag is retained.
 #'
 #' @examples
 #' # Example with default group/time flag
 #' sexBirth_data
-#' createGlobalVars(dataSet = sexBirth_data, listVarStems = "sex")
+#' createGlobalVars(df = sexBirth_data, vars = "sex")
 #'
 #' # Example with user-specified group/time flag (note the time flag pattern is "_t")
 #' yearBorn_data
-#' createGlobalVars(dataSet = yearBorn_data, listVarStems = "yearBorn", groupFlag = "_t")
+#' createGlobalVars(df = yearBorn_data, vars = "yearBorn", groupFlag = "_t")
 #'
 #' @export
-createGlobalVars <- function(dataSet, listVarStems,...){
+# Function to create global variables
+createGlobalVars <- function(df, vars, ..., groupFlag = "_w\\d$") {
 
-### quick check on required parameters
-stopifnot("\nThe data set you supplied is not a tibble or data frame." = any(class(dataSet) %in% c("tbl_df","tbl","data.frame")),
-          "\nThe variable stems you supplied are not in a vector." = is.vector(listVarStems))
-
-### proceed otherwise
-## extract other specified arguments & set defaults
-dots <- list(...)
-# set groupFlag
-groupFlag <-
-  if (!is.null(dots[["groupFlag"]])) {
-    dots[["groupFlag"]] }
-  else {
-    "_w\\d$"
+  # tidy table
+  if (!inherits(df, "tidytable")) {
+    df <- tidytable::as_tidytable(df)
   }
-# check that groupFlag ends in a digit
-groupFlag <- ifelse(grepl(escape_punct("\\d$"), groupFlag), groupFlag, paste0(groupFlag, "\\d$"))
-# check that groupFlag as underscore
-groupFlag <- ifelse(grepl(pattern = "^_", x = groupFlag), groupFlag, paste0("_",groupFlag))
-# create groupFlag shortened
-groupFlagShortened <- ifelse(grepl("^_w",groupFlag), "_w", gsub("\\d$","", groupFlag, fixed = TRUE))
+
+  # Main manipulation
+  new_GlobalVars <- lapply(vars, \(stemName) checkUpdate(df, stemName, groupFlag))
+
+  # Check + stop if any names already exist
+  existing_names <- intersect(names(df), vars)
+  if(length(existing_names) > 0) {
+    stop(paste0("\nThe following variables already exist in the supplied data set:\n",
+                paste(existing_names, collapse = "\n")))
+  }
+
+  # Add new variables to data.table
+  for (i in seq_along(vars)) {
+    df[,vars[i]] <- new_GlobalVars[[i]]
+  }
+
+  # convert back to data.frame
+  class(df) <- class(as.data.frame(df))
+
+  # return df
+  df
+}
 
 
-## general function for finding most up to date value to be pushed
-# NOTE: if NA/blank across the board, then NA is returned
-newVarValues <- function(dataSetSub, rowNum, stemName){
-  currentRow <- dataSetSub[rowNum,]
-  currentRowUpdate <- unlist(Filter(function(x) !any(is.na(x)), currentRow))
-  currentRowUpdate <- currentRowUpdate[currentRowUpdate != ""]
-  maxWave <- mgsub::mgsub(names(currentRowUpdate),
-                          pattern = rep(paste0(stemName, groupFlagShortened),
-                                        times = length(names(currentRowUpdate))),
-                          rep("", times = length(names(currentRowUpdate))))
+# Helper function for finding most up-to-date value to be pushed
+newVarValues <- function(df, rowNum, stemName, groupFlag = "_w\\d$") {
 
+  # Set up the groupFlag if not correct
+  groupFlag <- ifelse(grepl(escape_punct("\\d$"), groupFlag), groupFlag, paste0(groupFlag, "\\d$"))
+  groupFlag <- ifelse(grepl(pattern = "^_", groupFlag), groupFlag, paste0("_",groupFlag))
+  groupFlagShortened <- ifelse(grepl("^_w",groupFlag), "_w", gsub("\\d$","", groupFlag, fixed = TRUE))
+
+  # Pull current row of data
+  currentRow <- df[rowNum,,drop = FALSE]
+  currentRowUpdate <- unlist(Filter(function(df) !any(is.na(df)) & df != "", currentRow))
+
+  # Get wave information for variables
+  maxWave <- gsub(paste0("^", stemName, groupFlagShortened), "", names(currentRowUpdate))
   maxWave <- ifelse(length(maxWave) == 0, NA, max(maxWave))
 
-  if(length(unique(currentRowUpdate)) == 1){
-    currentRowUpdate[[1]]
-    }else if(length(unique(currentRowUpdate)) > 1){
-      currentRowUpdate[[paste0(stemName, groupFlagShortened,maxWave)]]
-    }else{
-      NA
-    }
+  # Find values
+  if (length(unique(currentRowUpdate)) == 1) {
+    return(currentRowUpdate[[1]])
+  } else if (length(unique(currentRowUpdate)) > 1) {
+    return(currentRowUpdate[[paste0(stemName, groupFlagShortened, maxWave)]])
+  } else {
+    return(NA)
+  }
 }
 
-## general function for creating pushed/global vector of values
-checkUpdate <- function(dataSet, stemName){
-  # iterate over list of stem variable names
-  lapply(stemName, \(x){
-    columnNames <- names(dataSet)[grepl(paste0("^",x, groupFlag), names(dataSet))]
-    subDat <- dataSet[columnNames]
-    newVar <- lapply(seq_len(nrow(subDat)), newVarValues, dataSetSub = subDat, stemName = x)
-    newVar <- lapply(newVar, function(x) ifelse(length(x) == 0, NA, x))
-    unlist(newVar)
-    })
-}
 
-## main manipulation
-new_GlobalVars <- data.frame(checkUpdate(dataSet, unlist(listVarStems)))
-names(new_GlobalVars) <- unlist(listVarStems)
+# Helper function for creating a pushed/global vector of values
+checkUpdate <- function(df, stemName, groupFlag = groupFlag) {
+  # Get the column names related to this stem
+  columnNames <- grep(paste0("^", stemName, groupFlag), names(df), value = TRUE)
 
-## check + stop if any names already exist
-if(any(names(new_GlobalVars) %in% names(dataSet))){
-  stop(paste0("\nThe following variables already exist in the supplied data set:\n",
-              paste0(names(new_GlobalVars)[which(names(new_GlobalVars) %in% names(dataSet))], collapse = "\n")))
-}
+  # subset df
+  df <- df[, columnNames, with = FALSE]
 
-## otherwise, bind new column(s) to original passed data set
-cbind.data.frame(dataSet, new_GlobalVars)
-
+  # Retrieve new values for each row
+  purrr::map_chr(seq_len(nrow(df)), \(rowNum) newVarValues(df, rowNum, stemName, groupFlag))
 }

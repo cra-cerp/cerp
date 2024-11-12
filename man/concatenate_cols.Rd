@@ -4,12 +4,12 @@
 \alias{concatenate_cols}
 \title{A function to concatenate the rows of supplied data frame columns}
 \usage{
-concatenate_cols(dataSet, column_names)
+concatenate_cols(df, vars)
 }
 \arguments{
-\item{column_names}{A vector of column names.}
+\item{df}{A tibble or data frame.}
 
-\item{dataset}{A tibble or data frame.}
+\item{vars}{A vector of column names.}
 }
 \value{
 A vector.
@@ -24,8 +24,8 @@ concat_example <- data.frame(id = c("id_3","id_1","id_2","id_2","id_1","id_3"),
 date = as.Date(c("2024-05-01","2024-08-01","2024-02-14","2024-05-01","2024-05-01","2024-01-01")),
 participantCode = c("NSF REU", "CAHSI", "DREU","DREU", "CAHSI", "NSF REU"))
 
-concat_example$concat_cols <- concatenate_cols(dataSet = concat_example,
-column_names = c("id", "date", "participantCode"))
+concat_example$concat_cols <- concatenate_cols(df = concat_example,
+vars = c("id", "date", "participantCode"))
 
 }
 \author{

@@ -4,10 +4,10 @@
 \alias{distinct_rows}
 \title{A function to retain/keep unique rows}
 \usage{
-distinct_rows(dataset, column, retain, keep_allVars, ...)
+distinct_rows(df, column, retain, keep_allVars, ...)
 }
 \arguments{
-\item{dataset}{A tibble or data frame.}
+\item{df}{A tibble or data frame.}
 
 \item{column}{A key column.}
 
@@ -38,7 +38,7 @@ distinct_example <- data.frame(id = c("id_3","id_1","id_2","id_2","id_1","id_3")
 date = as.Date(c("2024-05-01","2024-08-01","2024-02-14","2024-05-01","2024-05-01","2024-01-01")),
 participantCode = c("NSF REU", "CAHSI", "DREU","DREU", "CAHSI", "NSF REU"))
 distinct_example <- distinct_example[order(distinct_example$id, distinct_example$date),]
-distinct_rows(dataset = distinct_example, column = id, retain = first, keep_allVars = TRUE)
+distinct_rows(df = distinct_example, column = id, retain = first, keep_allVars = TRUE)
 
 # Example with multiple key columns and sorting
 # Here the latest date record by wave per id is retained
@@ -48,7 +48,7 @@ distinct_example2 <- data.frame(id = c("cerpid_001","cerpid_002","cerpid_003","c
 date = as.Date(c("2024-05-25","2024-05-01","2024-08-01","2024-03-20","2024-06-08","2024-06-03",
 "2024-08-12","2024-02-14")))
 distinct_example2 <- distinct_example2[order(distinct_example2$id, distinct_example2$date),]
-distinct_example2R <- distinct_rows(dataset = distinct_example2, column = id, retain = last,
+distinct_example2R <- distinct_rows(df = distinct_example2, column = id, retain = last,
 keep_allVars = TRUE, column2 = wave_flag)
 
 }
