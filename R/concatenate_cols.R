@@ -22,7 +22,6 @@
 #' vars = c("id", "date", "participantCode"))
 #'
 #' @export
-
 concatenate_cols <- function(df, vars){
 	## quick object checks
 	# df (check both class and that there is at least one row of data)
