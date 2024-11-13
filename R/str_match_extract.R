@@ -92,7 +92,8 @@ pattern <- paste0(tolower(objectDictionary), collapse = "|")
 
 ### begin find/match and extract
 result <- vapply(object, extract_matches, pattern = pattern, invert = invert,
-                 specialRun = specialRun, FUN.VALUE = character(1))
+                 specialRun = specialRun, FUN.VALUE = character(1),
+                 USE.NAMES = FALSE)
 # return result
 return(result)
 
@@ -119,3 +120,4 @@ extract_matches <- function(current_object, pattern, invert, specialRun) {
   }
 
 }
+
