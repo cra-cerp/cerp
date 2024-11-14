@@ -13,11 +13,11 @@
 #' input you can specify; variable values will be extracted from this column/field).
 #' \itemize{
 #'  \item \code{variableName_col}: An optional argument. This parameter is used to specify the name of the
-#'  column/field in the codebook to extract variable names from.
+#'  column/field in the codeBook to extract variable names from.
 #'  \item \code{variableValues_col}: An optional argument. This parameter is used to specify the name of the
-#'  column/field in the codebook to extract variable values from.
+#'  column/field in the codeBook to extract variable values from.
 #'  \item \code{valueLabels_col}: An optional argument. This parameter is used to specify the name of the
-#'  column/field in the codebook to extract value labels from.
+#'  column/field in the codeBook to extract value labels from.
 #'}
 #'
 #' @returns A data.frame or tibble.
@@ -39,7 +39,7 @@ convert_to_factor <- function(df, var, codeBook, ...) {
   stopifnot("df is not of tibble or data.frame" =
               any(class(df) %in% c("tbl_df","tbl","data.frame")),
             "codeBook is not of tibble or data.frame" =
-              any(class(codebook) %in% c("tbl_df","tbl","data.frame")),
+              any(class(codeBook) %in% c("tbl_df","tbl","data.frame")),
             "var is length of zero" = length(var) > 0)
 
   ### variable check
