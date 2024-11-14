@@ -28,6 +28,7 @@ Collate:
     'zzz.R'
     'checkDuplicates.R'
     'concatenate_cols.R'
+    'convert_to_factor.R'
     'createGlobalVars.R'
     'create_spss_labelledVector_function.R'
     'data.R'

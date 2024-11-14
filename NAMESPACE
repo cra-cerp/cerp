@@ -3,6 +3,7 @@
 export("%notin%")
 export(checkDuplicates)
 export(concatenate_cols)
+export(convert_to_factor)
 export(createGlobalVars)
 export(create_spss_labelledVector_function)
 export(distinct_rows)
