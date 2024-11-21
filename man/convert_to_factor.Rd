@@ -18,11 +18,11 @@ you can specify; variable names will be extracted from this column/field) and va
 input you can specify; variable values will be extracted from this column/field).
 \itemize{
  \item \code{variableName_col}: An optional argument. This parameter is used to specify the name of the
- column/field in the codebook to extract variable names from.
+ column/field in the codeBook to extract variable names from.
  \item \code{variableValues_col}: An optional argument. This parameter is used to specify the name of the
- column/field in the codebook to extract variable values from.
+ column/field in the codeBook to extract variable values from.
  \item \code{valueLabels_col}: An optional argument. This parameter is used to specify the name of the
- column/field in the codebook to extract value labels from.
+ column/field in the codeBook to extract value labels from.
 }}
 }
 \value{
