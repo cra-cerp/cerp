@@ -98,7 +98,7 @@ newVarValues <- function(df, rowNum, stemName, groupFlag = "_w\\d$") {
 # Helper function for creating a pushed/global vector of values
 checkUpdate <- function(df, stemName, groupFlag = groupFlag) {
   # Get the column names related to this stem
-  columnNames <- grep(paste0("^", stemName, groupFlag), names(df), value = TRUE)
+  columnNames <- grep(paste0("^", stemName, groupFlag, collapse = "|"), names(df), value = TRUE)
 
   # subset df
   df <- df[, columnNames, with = FALSE]
