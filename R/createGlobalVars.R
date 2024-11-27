@@ -34,35 +34,35 @@
 #' @export
 # Function to create global variables
 createGlobalVars <- function(df, vars, ..., groupFlag = "_w\\d$") {
-	
+
 	# convert select columns to character
-	colNames <- grep(paste0("^", vars, groupFlag), names(df), value = TRUE)
+	colNames <- grep(paste0("^", vars, groupFlag, collapase = "|"), names(df), value = TRUE)
 	df[] <- purrr::map_at(.x = df, .at = colNames, .f = as.character)
-	
+
 	# tidy table
 	if (!inherits(df, "tidytable")) {
 		df <- tidytable::as_tidytable(df)
 		}
-		
-		
+
+
 	# Main manipulation
 	new_GlobalVars <- lapply(vars, \(stemName) checkUpdate(df, stemName, groupFlag))
-	
+
 	# Check + stop if any names already exist
 	existing_names <- intersect(names(df), vars)
 	if(length(existing_names) > 0) {
 		stop(paste0("\nThe following variables already exist in the supplied data set:\n",
 		paste(existing_names, collapse = "\n")))
 	}
-	
+
 	# Add new variables to data.table
 	for (i in seq_along(vars)) {
 		df[,vars[i]] <- new_GlobalVars[[i]]
 	}
-	
+
 	# convert back to data.frame
 	class(df) <- class(as.data.frame(df))
-	
+
 	# return df
 	df
 }
