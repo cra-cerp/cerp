@@ -6,8 +6,6 @@
 #' @importFrom mgsub mgsub
 #' @importFrom tidytable as_tidytable
 #' @importFrom purrr map_chr
-#' @importFrom purrr map_at
-#' @importFrom dplyr bind_cols
 #'
 #' @param df A tibble or data frame object.
 #' @param vars A character vector of unique variable (name) stems.
@@ -38,7 +36,8 @@ createGlobalVars <- function(df, vars, ..., groupFlag = "_w\\d$") {
 
 	# convert select columns to character
 	colNames <- grep(paste0("^", vars, groupFlag, collapse = "|"), names(df), value = TRUE)
-	df <- purrr::map_at(.x = df, .at = colNames, .f = as.character) |> dplyr::bind_cols()
+	df[colNames] <- lapply(df[colNames], as.character)
+	# questioning: purrr::map_at(.x = df, .at = colNames, .f = as.character) |> dplyr::bind_cols()
 
 	# tidy table
 	if (!inherits(df, "tidytable")) {
