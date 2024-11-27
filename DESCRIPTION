@@ -10,12 +10,14 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     dplyr,
+    doParallel,
+    foreach,
     haven,
     mgsub,
+    purrr,
     rlang,
     rvest,
     stringr,
-    purrr,
     S7
 RoxygenNote: 7.3.1
 Depends: 
