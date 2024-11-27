@@ -4,7 +4,7 @@
 \alias{checkDuplicates}
 \title{Identify duplicates in a column and tag with each matched element's row number.}
 \usage{
-checkDuplicates(x, ...)
+checkDuplicates(x, ..., splitDelim = NULL)
 }
 \arguments{
 \item{x}{A vector or tibble/data frame object.}

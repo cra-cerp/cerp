@@ -17,6 +17,9 @@ createGlobalVars(df, vars, ..., groupFlag = "_w\\\\d$")
  or time flag pattern to identify each variable stem. The default is "_w". This default can be
  overridden by specifying another group or time flag pattern. See example 2 below.
  }}
+
+\item{groupFlag}{A group or time flag used to identify groups of variables. Default
+is "_w".}
 }
 \value{
 A character vector that is column-binded to the original supplied df. NOTE: The most recent

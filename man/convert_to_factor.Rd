@@ -35,7 +35,8 @@ and labels (;).
 }
 \examples{
 codeBook_race <- data.frame(variableName = "race_ethnicity", variableValues = "1,2,3,4",
-valueLabels = "Black/African American;Asian/Asian American;Indigenous;Native Hawaiian/Pacific Islander")
+valueLabels = "Black/African American;Asian/Asian American;Indigenous;
+Native Hawaiian/Pacific Islander")
 
 race_tabl <- data.frame(race_ethnicity = sample(c(1:4, NA), size = 500, replace = TRUE))
 

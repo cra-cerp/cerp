@@ -51,7 +51,7 @@
 #' splitDelim = ","))
 #'
 #' @export
-checkDuplicates <- S7::new_generic("checkDuplicates", "x", function(x, ...) {
+checkDuplicates <- S7::new_generic("checkDuplicates", "x", function(x, ..., splitDelim = NULL) {
   S7::S7_dispatch()
 })
 
@@ -127,23 +127,23 @@ S7::method(checkDuplicates, S7::class_data.frame) <-
   }
 
 #' @export
-S7::method(checkDuplicates, S7::class_Date) <- function(x, ...) {
+S7::method(checkDuplicates, S7::class_Date) <- function(x, ..., splitDelim = NULL) {
   x <- as.character(x)
   checkDuplicates(x, ...)
 }
 
 #' @export
-S7::method(checkDuplicates, S7::class_list) <- function(x, ...) {
+S7::method(checkDuplicates, S7::class_list) <- function(x, ..., splitDelim = NULL) {
   stop("Lists are currently not supported.")
 }
 
 #' @export
-S7::method(checkDuplicates, S7::class_logical) <- function(x, ...) {
+S7::method(checkDuplicates, S7::class_logical) <- function(x, ..., splitDelim = NULL) {
   stop("Logical vectors are currently not supported.")
 }
 
 #' @export
-S7::method(checkDuplicates, S7::class_complex) <- function(x, ...) {
+S7::method(checkDuplicates, S7::class_complex) <- function(x, ..., splitDelim = NULL) {
   stop("Complex vectors are currently not supported.")
 }
 

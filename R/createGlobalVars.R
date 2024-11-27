@@ -4,13 +4,14 @@
 #' response for a record.
 #'
 #' @importFrom mgsub mgsub
-#' @importFrom tidytable as_tidytable
 #' @importFrom purrr map_chr
 #' @importFrom purrr map_at
 #' @importFrom dplyr bind_cols
 #'
 #' @param df A tibble or data frame object.
 #' @param vars A character vector of unique variable (name) stems.
+#' @param groupFlag A group or time flag used to identify groups of variables. Default
+#' is "_w".
 #' @param \dots additional parameters to pass to function. These include:
 #' \itemize{
 #'  \item \code{groupFlag}: An optional parameter that is a character vector containing the group
@@ -40,14 +41,8 @@ createGlobalVars <- function(df, vars, ..., groupFlag = "_w\\d$") {
 	colNames <- grep(paste0("^", vars, groupFlag, collapse = "|"), names(df), value = TRUE)
 	df <- purrr::map_at(.x = df, .at = colNames, .f = as.character) |> dplyr::bind_cols()
 
-	# tidy table
-	if (!inherits(df, "tidytable")) {
-		df <- tidytable::as_tidytable(df)
-		}
-
-
 	# Main manipulation
-	new_GlobalVars <- lapply(vars, \(stemName) checkUpdate(df, stemName, groupFlag))
+	new_GlobalVars <- lapply(vars, checkUpdate, df = df, groupFlag = groupFlag)
 
 	# Check + stop if any names already exist
 	existing_names <- intersect(names(df), vars)
@@ -102,8 +97,8 @@ checkUpdate <- function(df, stemName, groupFlag = groupFlag) {
   columnNames <- grep(paste0("^", stemName, groupFlag, collapse = "|"), names(df), value = TRUE)
 
   # subset df
-  df <- df[, columnNames, with = FALSE]
+  new_df <- df[, columnNames, drop = FALSE]
 
   # Retrieve new values for each row
-  purrr::map_chr(.x = seq_len(nrow(df)), ~ newVarValues(df = df, rowNum = .x, stemName = stemName, groupFlag = groupFlag))
+  purrr::map_chr(.x = seq_len(nrow(df)), ~ newVarValues(df = new_df, rowNum = .x, stemName = stemName, groupFlag = groupFlag))
 }
