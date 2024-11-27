@@ -36,7 +36,7 @@
 createGlobalVars <- function(df, vars, ..., groupFlag = "_w\\d$") {
 
 	# convert select columns to character
-	colNames <- grep(paste0("^", vars, groupFlag, collapase = "|"), names(df), value = TRUE)
+	colNames <- grep(paste0("^", vars, groupFlag, collapse = "|"), names(df), value = TRUE)
 	df[] <- purrr::map_at(.x = df, .at = colNames, .f = as.character)
 
 	# tidy table
